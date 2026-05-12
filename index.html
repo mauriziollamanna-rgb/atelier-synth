@@ -42,8 +42,9 @@
     margin:0 auto;
     min-height:100vh;
     min-height:100dvh;
-    padding-bottom:calc(72px + var(--safe-bottom));
     position:relative;
+    display:flex;
+    flex-direction:column;
   }
   .mono{font-family:"DM Mono", ui-monospace, monospace;}
   .label{
@@ -401,10 +402,10 @@
 
   /* Transport */
   .transport{
-    position:fixed;
-    bottom:0; left:0; right:0;
-    max-width:390px;
-    margin:0 auto;
+    position:sticky;
+    bottom:0;
+    margin-top:auto;
+    width:100%;
     height:calc(56px + var(--safe-bottom));
     padding-bottom:var(--safe-bottom);
     background:var(--bg);
@@ -486,13 +487,11 @@
     </div>
   </div>
 
-  <div class="footer-pad"></div>
-</div>
-
-<div class="transport">
-  <button class="play" id="t-play">Play</button>
-  <button id="t-stop">Stop</button>
-  <button id="t-reset">Reset</button>
+  <div class="transport">
+    <button class="play" id="t-play">Play</button>
+    <button id="t-stop">Stop</button>
+    <button id="t-reset">Reset</button>
+  </div>
 </div>
 
 <script>
