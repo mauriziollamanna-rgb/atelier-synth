@@ -48,8 +48,6 @@
   .app{
     max-width:390px;
     margin:0 auto;
-    min-height:100vh;
-    min-height:100dvh;
     position:relative;
     display:flex;
     flex-direction:column;
@@ -63,7 +61,7 @@
   }
   /* Header */
   header{
-    padding:12px 16px 10px;
+    padding:8px 16px 6px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -100,7 +98,7 @@
   .engine-bar{
     position:sticky; top:0; z-index:20;
     background:var(--bg);
-    padding:10px 12px 12px;
+    padding:6px 12px 8px;
     border-bottom:3px solid var(--ink);
     display:grid;
     grid-template-columns:repeat(3,1fr);
@@ -127,7 +125,7 @@
 
   /* FX strip */
   .fx-bar{
-    padding:0 12px 12px;
+    padding:0 12px 8px;
     display:grid;
     grid-template-columns:repeat(6,1fr);
     gap:5px;
@@ -156,7 +154,7 @@
 
   /* Section labels */
   .section-label{
-    padding:8px 16px 6px;
+    padding:6px 16px 4px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -189,7 +187,7 @@
 
   /* Grid */
   .grid-wrap{
-    padding:0 12px 10px;
+    padding:0 12px 6px;
     display:flex;
     gap:6px;
     align-items:stretch;
@@ -305,7 +303,7 @@
 
   /* Tap tempo row */
   .tempo-row{
-    padding:8px 16px 12px;
+    padding:4px 16px 8px;
     display:flex; gap:10px; align-items:stretch;
     border-bottom:3px solid var(--ink);
   }
@@ -356,7 +354,7 @@
     color:var(--ink);
     margin-top:3px;
   }
-  .scrub-wrap{padding:2px 16px 18px; border-bottom:3px solid var(--ink);}
+  .scrub-wrap{padding:2px 16px 4px; border-bottom:3px solid var(--ink);}
   .scrub{
     width:100%;
     height:26px;
@@ -456,7 +454,6 @@
   .transport{
     position:sticky;
     bottom:0;
-    margin-top:auto;
     width:100%;
     height:calc(56px + var(--safe-bottom));
     padding-bottom:var(--safe-bottom);
@@ -514,13 +511,7 @@
     <button class="engine-tab" data-engine="moog">Moog</button>
   </nav>
 
-  <div class="section-label">
-    <span>Effects</span>
-    <div class="right">
-      <span class="meta" id="fx-meta">— —</span>
-      <button class="clear-btn" id="clear-fx">Clear</button>
-    </div>
-  </div>
+  <div class="section-label"><span>Effects</span><span class="meta" id="fx-meta">— —</span></div>
   <div class="fx-bar">
     <button class="fx-btn" data-fx="reverb">Rvrb</button>
     <button class="fx-btn" data-fx="delay">Dly</button>
@@ -530,13 +521,7 @@
     <button class="fx-btn" data-fx="choke">Chke</button>
   </div>
 
-  <div class="section-label">
-    <span>Sequence — 8 × 8</span>
-    <div class="right">
-      <span class="meta"><span id="step-counter">01 / 08</span><span class="beat-pip" id="beat-pip"></span></span>
-      <button class="clear-btn" id="clear-grid">Clear</button>
-    </div>
-  </div>
+  <div class="section-label"><span>Sequence — 8 × 8</span><span class="meta"><span id="step-counter">01 / 08</span><span class="beat-pip" id="beat-pip"></span></span></div>
 
   <div class="grid-wrap">
     <div class="row-labels" id="row-labels"></div>
@@ -548,13 +533,7 @@
     <div class="moog-strip-inner" id="moog-knobs"></div>
   </div>
 
-  <div class="section-label">
-    <span>Tempo</span>
-    <div class="right">
-      <span class="meta" id="bpm-meta">120.0 BPM</span>
-      <button class="clear-btn" id="clear-tempo">Reset</button>
-    </div>
-  </div>
+  <div class="section-label"><span>Tempo</span><span class="meta" id="bpm-meta">120.0 BPM</span></div>
   <div class="tempo-row">
     <button class="tap-btn" id="tap-btn">Tap</button>
     <div class="bpm-box">
@@ -1316,27 +1295,6 @@
       btn.classList.toggle("active", fxState[name]);
       applyFx(name);
     });
-  });
-
-  // Clear buttons
-  document.getElementById("clear-fx").addEventListener("click", ()=>{
-    ensureAudio();
-    Object.keys(fxState).forEach(name=>{
-      if (fxState[name]){
-        fxState[name] = false;
-        applyFx(name);
-        const btn = document.querySelector(`.fx-btn[data-fx="${name}"]`);
-        if (btn) btn.classList.remove("active");
-      }
-    });
-  });
-  document.getElementById("clear-grid").addEventListener("click", ()=>{
-    state.grid[state.engine] = makeGrid();
-    renderGrid();
-  });
-  document.getElementById("clear-tempo").addEventListener("click", ()=>{
-    state.tap.times = [];
-    setBPM(120);
   });
 
   // Transport
