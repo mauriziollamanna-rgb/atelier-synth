@@ -8,35 +8,43 @@
 <title>Atelier — Synth Workstation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;700&family=Bowlby+One&family=Bungee&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#EDE8DF;
-    --surface:#E4DDD2;
-    --ink:#2B2520;
-    --ink-2:#7A6E65;
-    --hair:#C8BFB2;
-    --cell:#D8D0C5;
-    --acc-808:#B85C3A;
-    --acc-909:#A87D3A;
-    --acc-moog:#3A3650;
-    --acc:#B85C3A;
-    --moss:#5C6B3A;
-    --fog:#7A8A94;
+    --bg:#FFF4DC;            /* hot cream */
+    --surface:#FFFFFF;
+    --ink:#0A0A0A;           /* near-black */
+    --ink-2:#444;
+    --hair:#0A0A0A;
+    --cell:#FFFFFF;
+    --acc-808:#FF1F4D;       /* Pop red */
+    --acc-909:#FFD400;       /* Pop yellow */
+    --acc-moog:#0A78FF;      /* Pop blue */
+    --acc:#FF1F4D;
+    --red:#FF1F4D;
+    --yellow:#FFD400;
+    --blue:#0A78FF;
+    --pink:#FF2D87;          /* Pop pink */
+    --cyan:#00C9D8;          /* Pop cyan */
+    --lime:#A4DE02;          /* Pop lime */
     --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);}
   body{
-    font-family:"Cormorant Garamond", Georgia, serif;
+    font-family:"Archivo", system-ui, sans-serif;
     font-size:13px;
     line-height:1.4;
     overscroll-behavior-y:contain;
     -webkit-font-smoothing:antialiased;
     background-color:var(--bg);
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.17  0 0 0 0 0.14  0 0 0 0 0.12  0 0 0 0.03 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-image:
+      radial-gradient(circle, rgba(255,45,135,0.18) 1.2px, transparent 1.6px);
+    background-size:10px 10px;
     background-attachment:fixed;
   }
+  /* Inside the app, knock the dots back to the cream — only show them in the side gutters on desktop */
+  .app{background:var(--bg);}
   .app{
     max-width:390px;
     margin:0 auto;
@@ -46,109 +54,146 @@
     display:flex;
     flex-direction:column;
   }
-  .mono{font-family:"DM Mono", ui-monospace, monospace;}
+  .mono{font-family:"Space Mono", ui-monospace, monospace;}
   .label{
-    font-family:"Cormorant Garamond", serif;
+    font-family:"Archivo Black", sans-serif;
     text-transform:uppercase;
-    letter-spacing:0.12em;
-    font-weight:500;
-    color:var(--ink-2);
+    letter-spacing:0.04em;
+    color:var(--ink);
   }
   /* Header */
   header{
-    padding:18px 16px 10px;
+    padding:12px 16px 10px;
     display:flex;
-    align-items:baseline;
+    align-items:center;
     justify-content:space-between;
-    border-bottom:0.5px solid var(--hair);
+    border-bottom:3px solid var(--ink);
+    background:var(--yellow);
+  }
+  header .mark-row{
+    display:flex; align-items:center; gap:10px;
+  }
+  header .bauhaus-mark{
+    width:54px; height:20px;
+    display:block;
   }
   header .mark{
-    font-size:18px;
-    letter-spacing:0.14em;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:19px;
+    letter-spacing:0.02em;
     text-transform:uppercase;
-    font-weight:500;
+    color:var(--ink);
+    text-shadow: 2px 2px 0 var(--pink);
   }
   header .sub{
-    font-size:10px;
-    letter-spacing:0.18em;
+    font-size:11px;
+    letter-spacing:0.14em;
     text-transform:uppercase;
-    color:var(--ink-2);
-    font-family:"DM Mono", monospace;
+    color:var(--ink);
+    font-family:"Space Mono", monospace;
+    font-weight:700;
+    padding:4px 8px;
+    background:var(--bg);
+    border:2px solid var(--ink);
   }
   /* Sticky engine selector */
   .engine-bar{
     position:sticky; top:0; z-index:20;
     background:var(--bg);
-    padding:10px 12px;
-    border-bottom:0.5px solid var(--hair);
+    padding:10px 12px 12px;
+    border-bottom:3px solid var(--ink);
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:6px;
   }
   .engine-tab{
-    height:48px;
-    border:0.5px solid var(--hair);
-    border-radius:2px;
-    background:transparent;
-    font-family:"Cormorant Garamond", serif;
+    height:44px;
+    border:3px solid var(--ink);
+    border-radius:0;
+    background:#fff;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
     font-size:14px;
-    font-weight:500;
-    letter-spacing:0.18em;
+    letter-spacing:0.04em;
     text-transform:uppercase;
     color:var(--ink);
     touch-action:manipulation;
-    transition:background .12s, color .12s, border-color .12s;
+    transition:background .12s, color .12s, transform .08s, box-shadow .08s;
+    position:relative;
   }
-  .engine-tab[data-engine="808"].active{background:var(--acc-808); color:var(--bg); border-color:var(--acc-808);}
-  .engine-tab[data-engine="909"].active{background:var(--acc-909); color:var(--bg); border-color:var(--acc-909);}
-  .engine-tab[data-engine="moog"].active{background:var(--acc-moog); color:var(--bg); border-color:var(--acc-moog);}
+  .engine-tab.active{transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--ink);}
+  .engine-tab[data-engine="808"].active{background:var(--red); color:#fff;}
+  .engine-tab[data-engine="909"].active{background:var(--yellow); color:var(--ink);}
+  .engine-tab[data-engine="moog"].active{background:var(--blue); color:#fff;}
 
   /* FX strip */
   .fx-bar{
     padding:0 12px 12px;
     display:grid;
     grid-template-columns:repeat(6,1fr);
-    gap:4px;
-    border-bottom:0.5px solid var(--hair);
+    gap:5px;
+    border-bottom:3px solid var(--ink);
   }
   .fx-btn{
-    height:44px;
-    border:0.5px solid var(--hair);
-    border-radius:2px;
-    background:transparent;
-    font-family:"Cormorant Garamond", serif;
+    height:38px;
+    border:3px solid var(--ink);
+    border-radius:0;
+    background:#fff;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
     font-size:11px;
-    letter-spacing:0.16em;
+    letter-spacing:0.04em;
     text-transform:uppercase;
     color:var(--ink);
     touch-action:manipulation;
-    transition:background .12s, color .12s, border-color .12s;
+    transition:transform .08s, box-shadow .08s;
   }
-  .fx-btn.active{
-    background:var(--acc);
-    color:var(--bg);
-    border-color:var(--acc);
-  }
+  .fx-btn[data-fx="reverb"].active {background:var(--pink); color:#fff;}
+  .fx-btn[data-fx="delay"].active  {background:var(--cyan); color:var(--ink);}
+  .fx-btn[data-fx="filter"].active {background:var(--lime); color:var(--ink);}
+  .fx-btn[data-fx="crush"].active  {background:var(--red); color:#fff;}
+  .fx-btn[data-fx="stutter"].active{background:var(--yellow); color:var(--ink);}
+  .fx-btn[data-fx="choke"].active  {background:var(--ink); color:var(--yellow);}
+  .fx-btn.active{transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--ink);}
 
   /* Section labels */
   .section-label{
-    padding:14px 16px 6px;
+    padding:8px 16px 6px;
     display:flex;
     align-items:center;
     justify-content:space-between;
-    font-size:10px;
-    letter-spacing:0.2em;
+    font-family:"Archivo Black", sans-serif;
+    font-size:11px;
+    letter-spacing:0.08em;
     text-transform:uppercase;
-    color:var(--ink-2);
+    color:var(--ink);
   }
-  .section-label .meta{font-family:"DM Mono", monospace; font-size:10px; color:var(--ink-2);}
+  .section-label .right{display:flex; align-items:center; gap:10px;}
+  .section-label .meta{font-family:"Space Mono", monospace; font-size:10px; font-weight:700; color:var(--ink); display:inline-flex; align-items:center;}
+  .clear-btn{
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:9px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:#fff;
+    border:2px solid var(--ink);
+    padding:5px 9px 4px;
+    border-radius:0;
+    touch-action:manipulation;
+    transition:transform .06s, background .06s, color .06s;
+  }
+  .clear-btn:active{
+    background:var(--red);
+    color:#fff;
+    transform:translate(1px,1px);
+  }
 
   /* Grid */
   .grid-wrap{
-    padding:0 12px;
+    padding:0 12px 10px;
     display:flex;
     gap:6px;
     align-items:stretch;
+    border-bottom:3px solid var(--ink);
   }
   .row-labels{
     width:30px;
@@ -158,30 +203,31 @@
   }
   .row-label{
     display:flex; align-items:center; justify-content:flex-end;
-    font-family:"DM Mono", monospace;
+    font-family:"Space Mono", monospace;
     font-size:9px;
-    letter-spacing:0.08em;
+    font-weight:700;
+    letter-spacing:0.04em;
     text-transform:uppercase;
-    color:var(--ink-2);
-    padding-right:4px;
+    color:var(--ink);
+    padding-right:6px;
     cursor:pointer;
     user-select:none;
     touch-action:manipulation;
     transition:opacity .12s;
   }
-  .row-label.muted{opacity:0.3;}
+  .row-label.muted{opacity:0.25;}
   .grid{
     flex:1;
     display:grid;
     grid-template-columns:repeat(8,1fr);
     grid-template-rows:repeat(8,1fr);
-    gap:4px;
+    gap:3px;
   }
   .cell{
     aspect-ratio:1/1;
     background:var(--cell);
-    border:0.5px solid var(--hair);
-    border-radius:2px;
+    border:2px solid var(--ink);
+    border-radius:0;
     position:relative;
     display:flex;
     align-items:center;
@@ -189,30 +235,30 @@
     touch-action:manipulation;
     transition:background .08s;
   }
-  .cell.active-col{background:rgba(43,37,32,0.10);}
-  .cell.playing{background:var(--ink); }
-  .cell.playing svg *{stroke:var(--bg) !important;}
+  .cell.active-col{
+    background:var(--yellow);
+    background-image:radial-gradient(circle, rgba(0,0,0,0.55) 1.4px, transparent 1.8px);
+    background-size:6px 6px;
+  }
+  .cell.playing{background:var(--pink); }
+  .cell.playing svg *{stroke:#fff !important; fill:#fff !important;}
   .cell svg{
     width:62%; height:62%;
     display:block;
     pointer-events:none;
   }
-  .cell svg *{
-    stroke:var(--acc);
-    fill:none;
-    stroke-width:1.5;
-    stroke-linejoin:miter;
-  }
   /* Beat 1 indicator */
   .beat-pip{
-    width:4px; height:4px;
-    background:var(--acc-808);
+    width:14px; height:14px;
+    border-radius:50%;
+    background:var(--pink);
+    border:2px solid var(--ink);
     display:inline-block;
     margin-left:8px;
     opacity:0;
-    transition:opacity .04s;
+    transition:opacity .04s, transform .04s;
   }
-  .beat-pip.flash{opacity:1;}
+  .beat-pip.flash{opacity:1; transform:scale(1.15);}
 
   /* Moog strip */
   .moog-strip{
@@ -220,7 +266,7 @@
     overflow-y:hidden;
     -webkit-overflow-scrolling:touch;
     padding:6px 12px 14px;
-    border-bottom:0.5px solid var(--hair);
+    border-bottom:2px solid var(--ink);
     display:none;
   }
   .moog-strip.visible{display:block;}
@@ -239,94 +285,100 @@
   }
   .knob svg{width:56px; height:56px; display:block;}
   .knob-label{
-    font-family:"DM Mono", monospace;
+    font-family:"Archivo Black", sans-serif;
     font-size:9px;
-    letter-spacing:0.08em;
+    letter-spacing:0.04em;
     text-transform:uppercase;
-    color:var(--ink-2);
+    color:var(--ink);
     margin-top:2px;
   }
   .knob-value{
-    font-family:"DM Mono", monospace;
+    font-family:"Space Mono", monospace;
     font-size:10px;
-    color:var(--acc-moog);
+    font-weight:700;
+    color:var(--blue);
     letter-spacing:0.04em;
   }
-  .knob .ring{stroke:var(--hair); stroke-width:1; fill:none;}
-  .knob .arc{stroke:var(--acc-moog); stroke-width:1.5; fill:none; stroke-linecap:butt;}
-  .knob .ind{stroke:var(--ink); stroke-width:1.5;}
+  .knob .ring{stroke:var(--ink); stroke-width:2; fill:none;}
+  .knob .arc{stroke:var(--blue); stroke-width:3; fill:none; stroke-linecap:butt;}
+  .knob .ind{stroke:var(--ink); stroke-width:2.5;}
 
   /* Tap tempo row */
   .tempo-row{
-    padding:10px 12px 12px;
-    display:flex; gap:8px; align-items:stretch;
-    border-bottom:0.5px solid var(--hair);
+    padding:8px 16px 12px;
+    display:flex; gap:10px; align-items:stretch;
+    border-bottom:3px solid var(--ink);
   }
   .tap-btn{
     flex:1;
-    height:64px;
-    border:0.5px solid var(--ink);
-    border-radius:2px;
-    background:transparent;
+    height:48px;
+    border:3px solid var(--ink);
+    border-radius:0;
+    background:var(--cyan);
     color:var(--ink);
-    font-family:"Cormorant Garamond", serif;
-    font-size:16px;
-    letter-spacing:0.22em;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:18px;
+    letter-spacing:0.06em;
     text-transform:uppercase;
     touch-action:manipulation;
-    transition:background .08s,color .08s;
+    transition:transform .06s, box-shadow .06s, background .06s, color .06s;
+    box-shadow:4px 4px 0 var(--ink);
   }
-  .tap-btn:active, .tap-btn.flash{background:var(--ink); color:var(--bg);}
+  .tap-btn:active, .tap-btn.flash{background:var(--pink); color:#fff; transform:translate(4px,4px); box-shadow:0 0 0 var(--ink);}
   .bpm-box{
-    width:120px;
-    border:0.5px solid var(--hair);
-    border-radius:2px;
+    width:108px;
+    border:3px solid var(--ink);
+    border-radius:0;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    padding:4px 0;
+    padding:2px 0;
+    background:#fff;
+    box-shadow:4px 4px 0 var(--ink);
   }
   .bpm-box .num{
-    font-family:"DM Mono", monospace;
-    font-size:28px;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:24px;
     color:var(--ink);
-    letter-spacing:0.02em;
+    letter-spacing:0.01em;
     line-height:1;
     outline:none;
     min-width:60px;
     text-align:center;
   }
   .bpm-box .lab{
-    font-family:"DM Mono", monospace;
-    font-size:9px;
-    letter-spacing:0.16em;
+    font-family:"Space Mono", monospace;
+    font-size:8px;
+    font-weight:700;
+    letter-spacing:0.1em;
     text-transform:uppercase;
-    color:var(--ink-2);
-    margin-top:4px;
+    color:var(--ink);
+    margin-top:3px;
   }
-  .scrub-wrap{padding:0 12px 12px; border-bottom:0.5px solid var(--hair);}
+  .scrub-wrap{padding:2px 16px 18px; border-bottom:3px solid var(--ink);}
   .scrub{
     width:100%;
-    height:24px;
+    height:26px;
     position:relative;
     touch-action:none;
   }
   .scrub-track{
-    position:absolute; top:11.5px; left:0; right:0; height:1px;
-    background:var(--hair);
+    position:absolute; top:11px; left:0; right:0; height:3px;
+    background:var(--ink);
+    opacity:0.15;
   }
   .scrub-fill{
-    position:absolute; top:11.5px; left:0; height:1px;
+    position:absolute; top:11px; left:0; height:3px;
     background:var(--ink);
     width:50%;
   }
   .scrub-thumb{
-    position:absolute; top:6px;
-    width:12px; height:12px;
-    border-radius:50%;
-    background:var(--bg);
-    border:0.5px solid var(--ink);
+    position:absolute; top:5px;
+    width:16px; height:16px;
+    border-radius:0;
+    background:var(--red);
+    border:2px solid var(--ink);
     transform:translateX(-50%);
     left:50%;
   }
@@ -409,7 +461,7 @@
     height:calc(56px + var(--safe-bottom));
     padding-bottom:var(--safe-bottom);
     background:var(--bg);
-    border-top:0.5px solid var(--hair);
+    border-top:3px solid var(--ink);
     display:grid;
     grid-template-columns:repeat(3,1fr);
     z-index:30;
@@ -418,16 +470,22 @@
     height:56px;
     background:transparent;
     border:none;
-    border-right:0.5px solid var(--hair);
-    font-family:"Cormorant Garamond", serif;
-    font-size:13px;
-    letter-spacing:0.24em;
+    border-right:3px solid var(--ink);
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:15px;
+    letter-spacing:0.06em;
     text-transform:uppercase;
     color:var(--ink);
     touch-action:manipulation;
+    transition:background .1s, color .1s;
   }
   .transport button:last-child{border-right:none;}
-  .transport .play.playing{background:var(--acc); color:var(--bg);}
+  .transport .play{background:var(--lime);}
+  .transport .play.playing{background:var(--pink); color:#fff;}
+  .transport #t-stop{background:#fff;}
+  .transport #t-stop:active{background:var(--yellow);}
+  .transport #t-reset{background:var(--cyan);}
+  .transport #t-reset:active{background:var(--red); color:#fff;}
 
   /* Misc */
   .footer-pad{height:8px;}
@@ -439,8 +497,15 @@
 <body>
 <div class="app">
   <header>
-    <div class="mark">Atelier · 88</div>
-    <div class="sub" id="hdr-meta">808 · 4/4</div>
+    <div class="mark-row">
+      <svg class="bauhaus-mark" viewBox="0 0 46 18" aria-hidden="true">
+        <circle cx="9" cy="9" r="8" fill="#1F4FA8"/>
+        <polygon points="23,1 31,17 15,17" fill="#F2C500"/>
+        <rect x="29" y="1" width="16" height="16" fill="#DA1F26"/>
+      </svg>
+      <div class="mark">Atelier 88</div>
+    </div>
+    <div class="sub" id="hdr-meta">808 / 4·4</div>
   </header>
 
   <nav class="engine-bar" role="tablist" aria-label="Engine">
@@ -449,7 +514,13 @@
     <button class="engine-tab" data-engine="moog">Moog</button>
   </nav>
 
-  <div class="section-label"><span>Effects</span><span class="meta" id="fx-meta">— —</span></div>
+  <div class="section-label">
+    <span>Effects</span>
+    <div class="right">
+      <span class="meta" id="fx-meta">— —</span>
+      <button class="clear-btn" id="clear-fx">Clear</button>
+    </div>
+  </div>
   <div class="fx-bar">
     <button class="fx-btn" data-fx="reverb">Rvrb</button>
     <button class="fx-btn" data-fx="delay">Dly</button>
@@ -459,7 +530,13 @@
     <button class="fx-btn" data-fx="choke">Chke</button>
   </div>
 
-  <div class="section-label"><span>Sequence — 8 × 8</span><span class="meta"><span id="step-counter">01 / 08</span><span class="beat-pip" id="beat-pip"></span></span></div>
+  <div class="section-label">
+    <span>Sequence — 8 × 8</span>
+    <div class="right">
+      <span class="meta"><span id="step-counter">01 / 08</span><span class="beat-pip" id="beat-pip"></span></span>
+      <button class="clear-btn" id="clear-grid">Clear</button>
+    </div>
+  </div>
 
   <div class="grid-wrap">
     <div class="row-labels" id="row-labels"></div>
@@ -471,7 +548,13 @@
     <div class="moog-strip-inner" id="moog-knobs"></div>
   </div>
 
-  <div class="section-label"><span>Tempo</span><span class="meta" id="bpm-meta">120.0 BPM</span></div>
+  <div class="section-label">
+    <span>Tempo</span>
+    <div class="right">
+      <span class="meta" id="bpm-meta">120.0 BPM</span>
+      <button class="clear-btn" id="clear-tempo">Reset</button>
+    </div>
+  </div>
   <div class="tempo-row">
     <button class="tap-btn" id="tap-btn">Tap</button>
     <div class="bpm-box">
@@ -1084,14 +1167,20 @@
   const moogStrip = document.getElementById("moog-strip");
   const moogKnobsEl = document.getElementById("moog-knobs");
 
-  function shapeSVG(shape, color){
-    const c = color || accent();
+  function shapeSVG(shape){
+    // Pop Art primaries + hot pink, with comic-book black outlines
+    const RED="#FF1F4D", YELLOW="#FFD400", BLUE="#0A78FF", PINK="#FF2D87", INK="#0A0A0A";
     if (shape === "empty") return "";
-    if (shape === "circle") return `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke="${c}" fill="none" stroke-width="1.5"/></svg>`;
-    if (shape === "triangle") return `<svg viewBox="0 0 24 24"><polygon points="12,5 20,19 4,19" stroke="${c}" fill="none" stroke-width="1.5"/></svg>`;
-    if (shape === "square") return `<svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" stroke="${c}" fill="none" stroke-width="2"/></svg>`;
-    if (shape === "cross") return `<svg viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18" stroke="${c}" stroke-width="1.5"/><line x1="18" y1="6" x2="6" y2="18" stroke="${c}" stroke-width="1.5"/></svg>`;
-    if (shape === "diamond") return `<svg viewBox="0 0 24 24"><polygon points="12,4 20,12 12,20 4,12" stroke="${c}" fill="none" stroke-width="1.5"/></svg>`;
+    if (shape === "circle")
+      return `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="${BLUE}" stroke="${INK}" stroke-width="2"/></svg>`;
+    if (shape === "triangle")
+      return `<svg viewBox="0 0 24 24"><polygon points="12,3 21.5,20.5 2.5,20.5" fill="${YELLOW}" stroke="${INK}" stroke-width="2" stroke-linejoin="miter"/></svg>`;
+    if (shape === "square")
+      return `<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="${RED}" stroke="${INK}" stroke-width="2"/></svg>`;
+    if (shape === "cross")
+      return `<svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19" stroke="${INK}" stroke-width="4" stroke-linecap="square"/><line x1="19" y1="5" x2="5" y2="19" stroke="${INK}" stroke-width="4" stroke-linecap="square"/></svg>`;
+    if (shape === "diamond")
+      return `<svg viewBox="0 0 24 24"><polygon points="12,3 21,12 12,21 3,12" fill="${PINK}" stroke="${INK}" stroke-width="2"/></svg>`;
     return "";
   }
 
@@ -1206,7 +1295,8 @@
       document.querySelectorAll(".engine-tab").forEach(x=>x.classList.toggle("active", x===t));
       document.documentElement.style.setProperty("--acc", accent());
       moogStrip.classList.toggle("visible", e === "moog");
-      document.getElementById("hdr-meta").textContent = (e.toUpperCase()) + " · 4/4";
+      document.getElementById("hdr-meta").textContent = (e.toUpperCase()) + " / 4·4";
+      document.body.dataset.acc = e;
       // Update transport play color if playing
       if (state.playing){
         const p = document.getElementById("t-play");
@@ -1226,6 +1316,27 @@
       btn.classList.toggle("active", fxState[name]);
       applyFx(name);
     });
+  });
+
+  // Clear buttons
+  document.getElementById("clear-fx").addEventListener("click", ()=>{
+    ensureAudio();
+    Object.keys(fxState).forEach(name=>{
+      if (fxState[name]){
+        fxState[name] = false;
+        applyFx(name);
+        const btn = document.querySelector(`.fx-btn[data-fx="${name}"]`);
+        if (btn) btn.classList.remove("active");
+      }
+    });
+  });
+  document.getElementById("clear-grid").addEventListener("click", ()=>{
+    state.grid[state.engine] = makeGrid();
+    renderGrid();
+  });
+  document.getElementById("clear-tempo").addEventListener("click", ()=>{
+    state.tap.times = [];
+    setBPM(120);
   });
 
   // Transport
