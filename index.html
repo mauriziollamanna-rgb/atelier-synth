@@ -98,11 +98,11 @@
   .engine-bar{
     position:sticky; top:0; z-index:20;
     background:var(--bg);
-    padding:6px 12px 8px;
+    padding:6px 10px 8px;
     border-bottom:3px solid var(--ink);
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:6px;
+    grid-template-columns:repeat(4,1fr);
+    gap:5px;
   }
   .engine-tab{
     height:44px;
@@ -110,18 +110,20 @@
     border-radius:0;
     background:#fff;
     font-family:"Bowlby One", "Archivo Black", sans-serif;
-    font-size:14px;
-    letter-spacing:0.04em;
+    font-size:13px;
+    letter-spacing:0.02em;
     text-transform:uppercase;
     color:var(--ink);
     touch-action:manipulation;
     transition:background .12s, color .12s, transform .08s, box-shadow .08s;
     position:relative;
+    padding:0;
   }
   .engine-tab.active{transform:translate(-2px,-2px); box-shadow:4px 4px 0 var(--ink);}
   .engine-tab[data-engine="808"].active{background:var(--red); color:#fff;}
   .engine-tab[data-engine="909"].active{background:var(--yellow); color:var(--ink);}
   .engine-tab[data-engine="moog"].active{background:var(--blue); color:#fff;}
+  .engine-tab[data-engine="samp"].active{background:#FF6B1F; color:#fff;}
 
   /* FX strip */
   .fx-bar{
@@ -262,6 +264,10 @@
   .moog-only{display:none;}
   body[data-acc="moog"] .moog-only{display:block;}
   body[data-acc="moog"] .non-moog{display:none;}
+  body[data-acc="samp"] .non-moog{display:none;}
+  body[data-acc="samp"] .moog-only{display:none;}
+  .samp-only{display:none;}
+  body[data-acc="samp"] .samp-only{display:block;}
 
   /* Moog strip */
   .moog-strip{
@@ -368,6 +374,176 @@
     text-transform:uppercase;
   }
   .kbd-meta .now{color:var(--blue);}
+
+  /* Sampler — Roland SP-style */
+  :root{ --roland:#FF4500; }
+
+  .samp-display{
+    margin:0 12px 8px;
+    padding:7px 12px;
+    border:3px solid var(--ink);
+    background:var(--ink);
+    color:var(--yellow);
+    font-family:"Space Mono", monospace;
+    font-weight:700;
+    letter-spacing:0.08em;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    text-transform:uppercase;
+  }
+  .lcd-value{ font-size:12px; letter-spacing:0.1em; }
+  .lcd-mode{ font-size:9px; opacity:0.85; letter-spacing:0.16em; }
+  .lcd-mode.rec{ color:#fff; }
+  .lcd-mode.rec::before{ content:"\25CF\00A0"; color:var(--roland); }
+  .lcd-mode.armed{ color:var(--roland); }
+
+  .bank-row{
+    display:flex;
+    gap:5px;
+    padding:0 12px 8px;
+  }
+  .bank-btn, .mod-btn{
+    flex:1;
+    height:30px;
+    border:3px solid var(--ink);
+    border-radius:0;
+    background:#fff;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:10px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink);
+    touch-action:manipulation;
+    transition:background .12s, color .12s;
+    padding:0 4px;
+  }
+  .bank-btn.active{ background:var(--roland); color:#fff; }
+  .mod-btn.active{ background:var(--ink); color:var(--yellow); }
+
+  .pad-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    grid-auto-rows:1fr;
+    gap:6px;
+    padding:0 12px 10px;
+  }
+  .pad{
+    aspect-ratio: 87/52;
+    border:3px solid var(--ink);
+    background:#fff;
+    border-radius:3px;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    color:var(--ink);
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:0;
+    touch-action:manipulation;
+    user-select:none;
+    -webkit-user-select:none;
+    transition: transform .06s, box-shadow .06s, background .06s, color .06s;
+    cursor:pointer;
+    overflow:hidden;
+  }
+  .pad .pad-num{
+    font-size:15px;
+    line-height:1;
+    letter-spacing:0.02em;
+  }
+  .pad .pad-tag{
+    font-family:"Space Mono", monospace;
+    font-weight:700;
+    font-size:8px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    margin-top:3px;
+    opacity:0.7;
+  }
+  /* SP-404 dark pad face when loaded */
+  .pad.has-sample{
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .pad.has-sample .pad-tag{ color: var(--yellow); opacity:0.9; }
+  /* Corner LED indicator (Roland-style) */
+  .pad.has-sample::before{
+    content:"";
+    position:absolute;
+    top:4px; left:4px;
+    width:6px; height:6px;
+    background: var(--yellow);
+    border-radius:50%;
+  }
+  .pad.armed{
+    background:#fff;
+    box-shadow: inset 0 0 0 3px var(--roland);
+  }
+  .pad.armed::before{
+    content:"";
+    position:absolute;
+    top:4px; left:4px;
+    width:6px; height:6px;
+    background: var(--roland);
+    border-radius:50%;
+    animation: pulseRec 0.6s infinite alternate;
+  }
+  .pad.flash, .pad:active{
+    transform: translate(-2px,-2px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .pad.flash{
+    background-color: var(--roland);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .pad.flash::before{ background:#fff; }
+
+  .rec-row{
+    padding:0 12px 12px;
+    display:flex;
+    gap:8px;
+  }
+  .rec-action{
+    flex:1;
+    height:48px;
+    border:3px solid var(--ink);
+    border-radius:0;
+    background:#fff;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:15px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink);
+    touch-action:manipulation;
+    transition:background .1s, color .1s, transform .06s, box-shadow .06s;
+  }
+  .rec-action.recording{
+    background: var(--roland);
+    color:#fff;
+    animation: pulseRec 0.55s infinite alternate;
+  }
+  @keyframes pulseRec{
+    from{ background: var(--roland); }
+    to{ background: var(--red); }
+  }
+  .rec-clear{
+    flex:0 0 76px;
+    height:48px;
+    border:3px solid var(--ink);
+    background:#fff;
+    border-radius:0;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:10px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color:var(--ink);
+    touch-action:manipulation;
+  }
+  .rec-clear:active{ background: var(--ink); color:#fff; }
 
   /* Tap tempo row */
   .tempo-row{
@@ -528,7 +704,7 @@
     background:var(--bg);
     border-top:3px solid var(--ink);
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(4,1fr);
     z-index:30;
   }
   .transport button{
@@ -537,20 +713,82 @@
     border:none;
     border-right:3px solid var(--ink);
     font-family:"Bowlby One", "Archivo Black", sans-serif;
-    font-size:15px;
-    letter-spacing:0.06em;
+    font-size:13px;
+    letter-spacing:0.04em;
     text-transform:uppercase;
     color:var(--ink);
     touch-action:manipulation;
     transition:background .1s, color .1s;
+    padding:0;
   }
   .transport button:last-child{border-right:none;}
   .transport .play{background:var(--lime);}
   .transport .play.playing{background:var(--pink); color:#fff;}
   .transport #t-stop{background:#fff;}
   .transport #t-stop:active{background:var(--yellow);}
+  .transport #t-rec{background:#fff;}
+  .transport #t-rec.recording{
+    background:var(--red); color:#fff;
+    animation: pulseRec 0.55s infinite alternate;
+  }
   .transport #t-reset{background:var(--cyan);}
   .transport #t-reset:active{background:var(--red); color:#fff;}
+
+  /* Share modal */
+  .share-overlay{
+    position:fixed; inset:0;
+    background:rgba(10,10,10,0.5);
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .share-overlay.open{display:flex;}
+  .share-modal{
+    background:var(--bg);
+    border:3px solid var(--ink);
+    box-shadow:6px 6px 0 var(--ink);
+    width:100%;
+    max-width:340px;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .share-modal h3{
+    margin:0;
+    font-family:"Bowlby One", sans-serif;
+    font-size:18px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .share-modal .meta{
+    font-family:"Space Mono", monospace;
+    font-size:11px;
+    font-weight:700;
+    color:var(--ink-2);
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+  }
+  .share-actions{ display:flex; gap:8px; }
+  .share-actions button{
+    flex:1;
+    height:48px;
+    border:3px solid var(--ink);
+    border-radius:0;
+    background:#fff;
+    font-family:"Bowlby One", sans-serif;
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--ink);
+    touch-action:manipulation;
+  }
+  .share-actions .primary{ background:var(--lime); }
+  .share-actions .secondary{ background:var(--cyan); }
+  .share-actions .close{ background:#fff; flex:0 0 70px; font-size:11px; }
+  audio.preview{ width:100%; }
 
   /* Misc */
   .footer-pad{height:8px;}
@@ -577,6 +815,7 @@
     <button class="engine-tab active" data-engine="808">808</button>
     <button class="engine-tab" data-engine="909">909</button>
     <button class="engine-tab" data-engine="moog">Moog</button>
+    <button class="engine-tab" data-engine="samp">Samp</button>
   </nav>
 
   <div class="section-label"><span>Effects</span><span class="meta" id="fx-meta">— —</span></div>
@@ -630,6 +869,25 @@
     </div>
   </div>
 
+  <!-- Sampler tab (Roland SP-style) -->
+  <div class="samp-only">
+    <div class="section-label"><span>Sampler</span><span class="meta">SP · 24 slots</span></div>
+    <div class="samp-display">
+      <span class="lcd-value" id="lcd-value">Bank A · 0/12</span>
+      <span class="lcd-mode" id="lcd-mode">Idle</span>
+    </div>
+    <div class="bank-row">
+      <button class="bank-btn active" data-bank="A">Bank A</button>
+      <button class="bank-btn" data-bank="B">Bank B</button>
+      <button class="mod-btn" data-mod="reverse">Rev</button>
+    </div>
+    <div class="pad-grid" id="pad-grid"></div>
+    <div class="rec-row">
+      <button class="rec-action" id="rec-action">Rec</button>
+      <button class="rec-clear" id="rec-clear">Clr Bank</button>
+    </div>
+  </div>
+
   <div class="section-label"><span>Tempo</span><span class="meta" id="bpm-meta">120.0 BPM</span></div>
   <div class="tempo-row">
     <button class="tap-btn" id="tap-btn">Tap</button>
@@ -649,7 +907,22 @@
   <div class="transport">
     <button class="play" id="t-play">Play</button>
     <button id="t-stop">Stop</button>
+    <button id="t-rec" aria-label="Record song">Rec</button>
     <button id="t-reset">Reset</button>
+  </div>
+</div>
+
+<!-- Share modal -->
+<div class="share-overlay" id="share-overlay" aria-hidden="true">
+  <div class="share-modal" role="dialog" aria-labelledby="share-title">
+    <h3 id="share-title">Track Bounced</h3>
+    <div class="meta" id="share-meta">— —</div>
+    <audio class="preview" id="share-audio" controls preload="auto"></audio>
+    <div class="share-actions">
+      <button class="primary" id="share-send">Share</button>
+      <button class="secondary" id="share-save">Save</button>
+      <button class="close" id="share-close">Close</button>
+    </div>
   </div>
 </div>
 
@@ -754,15 +1027,21 @@
     fx.sendsIn.connect(fx.reverb);
     fx.reverb.connect(fx.reverbSend);
 
+    // Master out bus — all final taps go through here so the song recorder
+    // can capture the same audio that hits the speakers.
+    fx.outBus = ac.createGain();
+    fx.outBus.gain.value = 1;
+    fx.outBus.connect(ac.destination);
+
     // Wire chain
     masterGain.connect(fx.filter);
     fx.filter.connect(fx.crushIn);
     fx.crushOut.connect(fx.stutterGate);
     fx.stutterGate.connect(fx.chokeGate);
     fx.chokeGate.connect(fx.sendsIn);
-    fx.sendsIn.connect(ac.destination); // dry
-    fx.delaySend.connect(ac.destination); // delay wet
-    fx.reverbSend.connect(ac.destination); // reverb wet
+    fx.sendsIn.connect(fx.outBus);  // dry
+    fx.delaySend.connect(fx.outBus); // delay wet
+    fx.reverbSend.connect(fx.outBus); // reverb wet
   }
 
   function applyFx(name){
@@ -867,7 +1146,13 @@
     }
     return g;
   }
-  function accent(){ return state.engine === "808" ? "#B85C3A" : state.engine === "909" ? "#A87D3A" : "#3A3650"; }
+  function accent(){
+    if (state.engine === "808") return "#FF1F4D";
+    if (state.engine === "909") return "#FFD400";
+    if (state.engine === "moog") return "#0A78FF";
+    if (state.engine === "samp") return "#FF6B1F";
+    return "#FF1F4D";
+  }
   function rowLabels(){ return state.engine === "moog" ? ROWS_MOOG : ROWS_DRUM_LABEL; }
   function rowVoices(){ return state.engine === "moog" ? ROWS_MOOG : ROWS_DRUM; }
 
@@ -1145,61 +1430,427 @@
     });
   }
 
-  // ---------- Moog live keyboard ----------
-  let moogHeld = null; // currently held DOM key
-  function moogKeyOn(hz, vel){
+  // ---------- Moog polyphonic keyboard ----------
+  // Each finger/pointer gets its own independent voice (2 osc + ladder filter + VCA).
+  const activeVoices = new Map(); // pointerId -> { o1, o2, vca, flt1, flt2 }
+
+  function moogVoiceOn(pointerId, hz, vel){
     ensureAudio();
     if (ac.state === "suspended") ac.resume();
-    ensureMoog();
+    ensureMoog(); // ensure shared LFO exists
     const t = ac.currentTime;
-    const port = state.moog.portamento;
-    moog.osc1.frequency.cancelScheduledValues(t);
-    moog.osc2.frequency.cancelScheduledValues(t);
-    moog.osc1.frequency.setTargetAtTime(hz, t, Math.max(0.0001, port));
-    moog.osc2.frequency.setTargetAtTime(hz, t, Math.max(0.0001, port));
-    moog.lastFreq = hz;
+
+    const o1 = ac.createOscillator(); o1.type = "sawtooth";
+    const o2 = ac.createOscillator(); o2.type = "sawtooth";
+    const oscGain = ac.createGain(); oscGain.gain.value = 0.32;
+    const flt1 = ac.createBiquadFilter(); flt1.type = "lowpass"; flt1.Q.value = state.moog.resonance * 16;
+    const flt2 = ac.createBiquadFilter(); flt2.type = "lowpass"; flt2.Q.value = state.moog.resonance * 8;
+    const vca = ac.createGain(); vca.gain.value = 0;
+
+    o1.detune.value = -state.moog.detune;
+    o2.detune.value = +state.moog.detune;
+    o1.frequency.value = hz;
+    o2.frequency.value = hz;
+
+    o1.connect(oscGain); o2.connect(oscGain);
+    oscGain.connect(flt1); flt1.connect(flt2); flt2.connect(vca);
+    vca.connect(masterGain);
+
+    // Share global LFO modulation
+    if (moog.lfoGain){
+      try { moog.lfoGain.connect(flt1.frequency); } catch(_){}
+    }
+
+    o1.start(t); o2.start(t);
 
     const a = state.moog.attack;
     const d = state.moog.decay;
     const s = state.moog.sustain;
-    const peak = (vel || 0.85) * 0.6;
+    const peak = (vel || 0.85) * 0.35;  // lower per-voice to avoid clipping with chords
     const sus = peak * s;
 
-    const g = moog.vca.gain;
-    const currentG = g.value;
-    g.cancelScheduledValues(t);
-    g.setValueAtTime(currentG, t);
-    g.linearRampToValueAtTime(peak, t + Math.max(0.001, a));
-    g.linearRampToValueAtTime(sus, t + Math.max(0.001, a) + Math.max(0.001, d));
+    vca.gain.setValueAtTime(0, t);
+    vca.gain.linearRampToValueAtTime(peak, t + Math.max(0.001, a));
+    vca.gain.linearRampToValueAtTime(sus, t + Math.max(0.001, a) + Math.max(0.001, d));
 
     const baseCut = state.moog.cutoff;
     const envAmt = state.moog.envAmt;
     const peakCut = clamp(baseCut + envAmt * 6000, 30, 18000);
     const sustainCut = clamp(baseCut + envAmt * 2000 * s, 30, 18000);
-    [moog.filter.frequency, moog.filter2.frequency].forEach(fp=>{
-      const curF = fp.value;
-      fp.cancelScheduledValues(t);
-      fp.setValueAtTime(curF, t);
+    [flt1.frequency, flt2.frequency].forEach(fp=>{
+      fp.setValueAtTime(baseCut, t);
       fp.linearRampToValueAtTime(peakCut, t + Math.max(0.001, a));
       fp.linearRampToValueAtTime(sustainCut, t + Math.max(0.001, a) + Math.max(0.001, d));
     });
+
+    activeVoices.set(pointerId, { o1, o2, vca, flt1, flt2 });
   }
-  function moogKeyOff(){
-    if (!ac || !moog.vca) return;
+
+  function moogVoiceOff(pointerId){
+    const v = activeVoices.get(pointerId);
+    if (!v || !ac) return;
+    activeVoices.delete(pointerId);
     const t = ac.currentTime;
     const r = state.moog.release;
-    const g = moog.vca.gain;
-    const cur = g.value;
-    g.cancelScheduledValues(t);
-    g.setValueAtTime(cur, t);
-    g.linearRampToValueAtTime(0, t + Math.max(0.005, r));
-    const baseCut = state.moog.cutoff;
-    [moog.filter.frequency, moog.filter2.frequency].forEach(fp=>{
-      const curF = fp.value;
-      fp.cancelScheduledValues(t);
-      fp.setValueAtTime(curF, t);
-      fp.linearRampToValueAtTime(baseCut, t + Math.max(0.005, r));
+    const releaseEnd = t + Math.max(0.005, r);
+    const cur = v.vca.gain.value;
+    v.vca.gain.cancelScheduledValues(t);
+    v.vca.gain.setValueAtTime(cur, t);
+    v.vca.gain.linearRampToValueAtTime(0, releaseEnd);
+    try { v.o1.stop(releaseEnd + 0.05); v.o2.stop(releaseEnd + 0.05); } catch(_){}
+    if (moog.lfoGain){
+      try { moog.lfoGain.disconnect(v.flt1.frequency); } catch(_){}
+    }
+  }
+
+  // ---------- Sampler (Roland SP-style: 2 banks × 12 pads = 24 slots) ----------
+  const PAD_COUNT = 12;
+
+  const sampler = {
+    banks: {
+      A: { samples: new Array(PAD_COUNT).fill(null), armed: -1 },
+      B: { samples: new Array(PAD_COUNT).fill(null), armed: -1 }
+    },
+    currentBank: "A",
+    reverse: false,
+    recording: false,
+    mediaStream: null,
+    mediaRecorder: null,
+    chunks: []
+  };
+
+  function curBank(){ return sampler.banks[sampler.currentBank]; }
+
+  function buildPads(){
+    const grid = document.getElementById("pad-grid");
+    grid.innerHTML = "";
+    for (let i=0; i<PAD_COUNT; i++){
+      const pad = document.createElement("div");
+      pad.className = "pad";
+      pad.dataset.pad = i;
+      pad.innerHTML = `<span class="pad-num" data-num></span><span class="pad-tag" data-tag></span>`;
+      grid.appendChild(pad);
+    }
+    attachPadHandlers();
+    renderPads();
+  }
+
+  function renderPads(){
+    const bank = curBank();
+    document.querySelectorAll(".pad").forEach(p=>{
+      const idx = parseInt(p.dataset.pad,10);
+      const sample = bank.samples[idx];
+      p.classList.toggle("has-sample", !!sample);
+      p.classList.toggle("armed", bank.armed === idx && !sample);
+      p.querySelector("[data-num]").textContent = sampler.currentBank + (idx+1);
+      const tag = p.querySelector("[data-tag]");
+      tag.textContent = sample ? sample.sec.toFixed(1) + "s" : "";
     });
+    document.querySelectorAll(".bank-btn").forEach(b=>{
+      b.classList.toggle("active", b.dataset.bank === sampler.currentBank);
+    });
+    document.querySelectorAll(".mod-btn").forEach(b=>{
+      if (b.dataset.mod === "reverse") b.classList.toggle("active", sampler.reverse);
+    });
+    renderLcd();
+  }
+
+  function renderLcd(){
+    const lcdV = document.getElementById("lcd-value");
+    const lcdM = document.getElementById("lcd-mode");
+    if (!lcdV || !lcdM) return;
+    const bank = curBank();
+    const loaded = bank.samples.filter(s=>s).length;
+    lcdM.className = "lcd-mode";
+    if (sampler.recording){
+      const tgt = bank.armed >= 0 ? `${sampler.currentBank}${bank.armed+1}` : `Bank ${sampler.currentBank}`;
+      lcdV.textContent = `${tgt} · — — —`;
+      lcdM.textContent = "Rec";
+      lcdM.classList.add("rec");
+    } else if (bank.armed >= 0){
+      lcdV.textContent = `${sampler.currentBank}${bank.armed+1} · Armed`;
+      lcdM.textContent = "Arm";
+      lcdM.classList.add("armed");
+    } else {
+      lcdV.textContent = `Bank ${sampler.currentBank} · ${loaded}/12`;
+      lcdM.textContent = sampler.reverse ? "Rev" : "Idle";
+    }
+  }
+
+  function findNextEmptyPad(){
+    const s = curBank().samples;
+    for (let i=0; i<PAD_COUNT; i++) if (!s[i]) return i;
+    return -1;
+  }
+
+  // Cache reversed buffer so we don't re-reverse on every play.
+  function getPlaybackBuffer(sample){
+    if (!sampler.reverse) return sample.buffer;
+    if (!sample.revBuffer){
+      const src = sample.buffer;
+      const rev = ac.createBuffer(src.numberOfChannels, src.length, src.sampleRate);
+      for (let c=0; c<src.numberOfChannels; c++){
+        const a = src.getChannelData(c);
+        const b = rev.getChannelData(c);
+        for (let i=0; i<a.length; i++) b[i] = a[a.length-1-i];
+      }
+      sample.revBuffer = rev;
+    }
+    return sample.revBuffer;
+  }
+
+  function playPad(idx){
+    ensureAudio();
+    const sample = curBank().samples[idx];
+    if (!sample) return;
+    const src = ac.createBufferSource();
+    src.buffer = getPlaybackBuffer(sample);
+    src.connect(masterGain);
+    src.start();
+    const padEl = document.querySelector(`.pad[data-pad="${idx}"]`);
+    if (padEl){
+      padEl.classList.add("flash");
+      setTimeout(()=>padEl.classList.remove("flash"), 110);
+    }
+  }
+
+  function clearPad(idx){
+    const bank = curBank();
+    bank.samples[idx] = null;
+    if (bank.armed === idx) bank.armed = -1;
+    renderPads();
+  }
+
+  function armPad(idx){
+    const bank = curBank();
+    bank.armed = (bank.armed === idx) ? -1 : idx;
+    renderPads();
+  }
+
+  function switchBank(name){
+    if (!sampler.banks[name]) return;
+    sampler.currentBank = name;
+    renderPads();
+  }
+
+  function toggleReverse(){
+    sampler.reverse = !sampler.reverse;
+    renderPads();
+  }
+
+  async function startSamplerRec(){
+    ensureAudio();
+    if (ac.state === "suspended") await ac.resume();
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      sampler.mediaStream = stream;
+      sampler.chunks = [];
+      const mime = MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus" : undefined;
+      sampler.mediaRecorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+      sampler.mediaRecorder.ondataavailable = e=>{ if (e.data && e.data.size > 0) sampler.chunks.push(e.data); };
+      sampler.mediaRecorder.onstop = async ()=>{
+        const blob = new Blob(sampler.chunks, { type: sampler.chunks[0]?.type || "audio/webm" });
+        try {
+          const arrBuf = await blob.arrayBuffer();
+          const audioBuf = await ac.decodeAudioData(arrBuf);
+          const bank = curBank();
+          let target = bank.armed;
+          if (target < 0) target = findNextEmptyPad();
+          if (target >= 0){
+            bank.samples[target] = { buffer: audioBuf, sec: audioBuf.duration };
+          }
+          bank.armed = -1;
+        } catch(err){ console.warn("decode failed", err); }
+        if (sampler.mediaStream){
+          sampler.mediaStream.getTracks().forEach(t=>t.stop());
+          sampler.mediaStream = null;
+        }
+        sampler.recording = false;
+        const btn = document.getElementById("rec-action");
+        btn.classList.remove("recording");
+        btn.textContent = "Rec";
+        renderPads();
+      };
+      sampler.mediaRecorder.start();
+      sampler.recording = true;
+      const btn = document.getElementById("rec-action");
+      btn.classList.add("recording");
+      btn.textContent = "Stop";
+      renderPads();
+    } catch(err){
+      const lcdM = document.getElementById("lcd-mode");
+      if (lcdM){ lcdM.textContent = "Mic Denied"; }
+      console.warn(err);
+    }
+  }
+
+  function stopSamplerRec(){
+    if (!sampler.recording || !sampler.mediaRecorder) return;
+    try { sampler.mediaRecorder.stop(); } catch(_){}
+  }
+
+  function attachPadHandlers(){
+    document.querySelectorAll(".pad").forEach(pad=>{
+      let pressTimer = null;
+      let longPressed = false;
+      pad.addEventListener("pointerdown", e=>{
+        e.preventDefault();
+        longPressed = false;
+        pressTimer = setTimeout(()=>{
+          longPressed = true;
+          clearPad(parseInt(pad.dataset.pad, 10));
+        }, 500);
+      });
+      pad.addEventListener("pointerup", ()=>{
+        if (pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
+        if (longPressed) return;
+        const idx = parseInt(pad.dataset.pad, 10);
+        const sample = curBank().samples[idx];
+        if (sample) playPad(idx);
+        else armPad(idx);
+      });
+      pad.addEventListener("pointercancel", ()=>{
+        if (pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
+      });
+      pad.addEventListener("pointerleave", ()=>{
+        if (pressTimer){ clearTimeout(pressTimer); pressTimer = null; }
+      });
+    });
+  }
+
+  // ---------- Song bounce + share ----------
+  const songRec = {
+    active: false,
+    recorder: null,
+    streamDest: null,
+    chunks: [],
+    startedAt: 0,
+    lastBlob: null,
+    lastUrl: null
+  };
+
+  function songRecMime(){
+    if (typeof MediaRecorder === "undefined" || !MediaRecorder.isTypeSupported) return "";
+    const candidates = [
+      "audio/webm;codecs=opus",
+      "audio/mp4;codecs=mp4a.40.2",
+      "audio/ogg;codecs=opus",
+      "audio/webm",
+      "audio/mp4"
+    ];
+    for (const m of candidates) if (MediaRecorder.isTypeSupported(m)) return m;
+    return "";
+  }
+  function extFromMime(mime){
+    if (!mime) return "webm";
+    if (mime.includes("mp4")) return "m4a";
+    if (mime.includes("ogg")) return "ogg";
+    return "webm";
+  }
+
+  function startSongRec(){
+    ensureAudio();
+    if (ac.state === "suspended") ac.resume();
+    if (songRec.active) return;
+    if (!fx.outBus){ console.warn("no outBus"); return; }
+    if (typeof MediaRecorder === "undefined"){
+      alert("Recording isn't supported in this browser.");
+      return;
+    }
+    songRec.streamDest = ac.createMediaStreamDestination();
+    fx.outBus.connect(songRec.streamDest);
+    const mime = songRecMime();
+    songRec.recorder = mime
+      ? new MediaRecorder(songRec.streamDest.stream, { mimeType: mime })
+      : new MediaRecorder(songRec.streamDest.stream);
+    songRec.chunks = [];
+    songRec.recorder.ondataavailable = e => { if (e.data && e.data.size > 0) songRec.chunks.push(e.data); };
+    songRec.recorder.onstop = () => {
+      try { fx.outBus.disconnect(songRec.streamDest); } catch(_){}
+      const blobMime = songRec.chunks[0]?.type || mime || "audio/webm";
+      const blob = new Blob(songRec.chunks, { type: blobMime });
+      songRec.lastBlob = blob;
+      if (songRec.lastUrl) URL.revokeObjectURL(songRec.lastUrl);
+      songRec.lastUrl = URL.createObjectURL(blob);
+      songRec.active = false;
+      document.getElementById("t-rec").classList.remove("recording");
+      openShareModal(blob, songRec.lastUrl);
+    };
+    songRec.recorder.start();
+    songRec.active = true;
+    songRec.startedAt = ac.currentTime;
+    document.getElementById("t-rec").classList.add("recording");
+    // Auto-start transport if not already playing so the user gets audio in the recording.
+    if (!state.playing) startTransport();
+  }
+
+  function stopSongRec(){
+    if (!songRec.active || !songRec.recorder) return;
+    try { songRec.recorder.stop(); } catch(_){}
+  }
+
+  function fmtDuration(sec){
+    if (!isFinite(sec) || sec <= 0) return "0:00";
+    const m = Math.floor(sec/60), s = Math.floor(sec%60);
+    return `${m}:${String(s).padStart(2,"0")}`;
+  }
+
+  function openShareModal(blob, url){
+    const overlay = document.getElementById("share-overlay");
+    const audio = document.getElementById("share-audio");
+    const meta = document.getElementById("share-meta");
+    audio.src = url;
+    audio.onloadedmetadata = () => {
+      const sizeKb = Math.round(blob.size/1024);
+      meta.textContent = `${fmtDuration(audio.duration)} · ${sizeKb} kb · ${blob.type.split(";")[0]}`;
+    };
+    overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden", "false");
+  }
+  function closeShareModal(){
+    const overlay = document.getElementById("share-overlay");
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
+    const audio = document.getElementById("share-audio");
+    audio.pause();
+  }
+
+  function songFilename(){
+    const d = new Date();
+    const pad = n=>String(n).padStart(2,"0");
+    const stamp = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+    return `atelier88-${stamp}.${extFromMime(songRec.lastBlob?.type || "")}`;
+  }
+
+  async function shareSong(){
+    if (!songRec.lastBlob) return;
+    const file = new File([songRec.lastBlob], songFilename(), { type: songRec.lastBlob.type });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })){
+        await navigator.share({
+          title: "Atelier 88",
+          text: "A track I made in Atelier 88",
+          files: [file]
+        });
+        return;
+      }
+    } catch(err){
+      // user cancelled or share failed — fall through to download fallback
+      if (err && err.name === "AbortError") return;
+      console.warn("share failed", err);
+    }
+    // Fallback: trigger download
+    downloadSong();
+  }
+  function downloadSong(){
+    if (!songRec.lastUrl) return;
+    const a = document.createElement("a");
+    a.href = songRec.lastUrl;
+    a.download = songFilename();
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   }
 
   function velFromShape(shape, _v){
@@ -1438,48 +2089,85 @@
     });
   });
 
-  // Mini live keyboard (Moog only)
+  // Polyphonic live keyboard (Moog only) — each pointer = independent voice
   const kbdEl = document.getElementById("keyboard");
   const kbdNow = document.getElementById("kbd-now");
+  const pointerKeys = new Map(); // pointerId -> currently-pressed key DOM element
+
   function keyAtPoint(x, y){
+    // Black keys overlap white keys in the DOM; elementFromPoint returns the topmost
+    // (which is the black key when finger is over a black key region — correct behavior).
     const el = document.elementFromPoint(x, y);
     if (!el) return null;
     if (el.classList && (el.classList.contains("white-key") || el.classList.contains("black-key"))) return el;
     return null;
   }
-  function pressKey(el){
-    if (!el || el === moogHeld) return;
-    if (moogHeld) moogHeld.classList.remove("pressed");
-    moogHeld = el;
-    el.classList.add("pressed");
-    moogKeyOn(parseFloat(el.dataset.hz), 0.9);
-    if (kbdNow) kbdNow.textContent = el.dataset.note;
+
+  function updateKbdNow(){
+    if (!kbdNow) return;
+    if (pointerKeys.size === 0){ kbdNow.textContent = "—"; return; }
+    // Show chord = all currently held notes (de-duplicated, in DOM order)
+    const seen = new Set();
+    const notes = [];
+    for (const k of pointerKeys.values()){
+      if (k && !seen.has(k.dataset.note)){
+        seen.add(k.dataset.note);
+        notes.push(k.dataset.note);
+      }
+    }
+    kbdNow.textContent = notes.join(" ");
   }
-  function releaseKey(){
-    if (moogHeld) moogHeld.classList.remove("pressed");
-    moogHeld = null;
-    moogKeyOff();
-    if (kbdNow) kbdNow.textContent = "—";
+
+  function pressForPointer(pointerId, key){
+    if (!key) return;
+    const prev = pointerKeys.get(pointerId);
+    if (prev === key) return;
+    // Release prior voice for this pointer (slide)
+    if (prev){
+      prev.classList.remove("pressed");
+      moogVoiceOff(pointerId);
+    }
+    key.classList.add("pressed");
+    pointerKeys.set(pointerId, key);
+    moogVoiceOn(pointerId, parseFloat(key.dataset.hz), 0.9);
+    updateKbdNow();
   }
+
+  function releasePointer(pointerId){
+    const key = pointerKeys.get(pointerId);
+    if (!key) return;
+    // Only un-highlight if no OTHER pointer is holding the same key
+    let stillHeld = false;
+    for (const [pid, k] of pointerKeys){
+      if (pid !== pointerId && k === key){ stillHeld = true; break; }
+    }
+    if (!stillHeld) key.classList.remove("pressed");
+    pointerKeys.delete(pointerId);
+    moogVoiceOff(pointerId);
+    updateKbdNow();
+  }
+
   kbdEl.addEventListener("pointerdown", e=>{
     e.preventDefault();
     kbdEl.setPointerCapture(e.pointerId);
-    pressKey(keyAtPoint(e.clientX, e.clientY));
+    pressForPointer(e.pointerId, keyAtPoint(e.clientX, e.clientY));
   });
   kbdEl.addEventListener("pointermove", e=>{
-    if (!moogHeld) return;
-    pressKey(keyAtPoint(e.clientX, e.clientY));
+    if (!pointerKeys.has(e.pointerId)) return;
+    const key = keyAtPoint(e.clientX, e.clientY);
+    if (!key){
+      // Finger dragged off the keyboard
+      releasePointer(e.pointerId);
+      return;
+    }
+    pressForPointer(e.pointerId, key);
   });
   const kbdRelease = e=>{
-    try{ kbdEl.releasePointerCapture(e.pointerId); }catch(_){}
-    releaseKey();
+    try { kbdEl.releasePointerCapture(e.pointerId); } catch(_){}
+    releasePointer(e.pointerId);
   };
   kbdEl.addEventListener("pointerup", kbdRelease);
   kbdEl.addEventListener("pointercancel", kbdRelease);
-  kbdEl.addEventListener("pointerleave", e=>{
-    // only release if pointer fully leaves
-    if (moogHeld && !kbdEl.contains(document.elementFromPoint(e.clientX, e.clientY))) releaseKey();
-  });
 
   // FX buttons
   document.querySelectorAll(".fx-btn").forEach(btn=>{
@@ -1494,8 +2182,25 @@
 
   // Transport
   document.getElementById("t-play").addEventListener("click", ()=>{ ensureAudio(); if(!state.playing) startTransport(); });
-  document.getElementById("t-stop").addEventListener("click", stopTransport);
-  document.getElementById("t-reset").addEventListener("click", ()=>{ stopTransport(); resetSequence(); });
+  document.getElementById("t-stop").addEventListener("click", ()=>{
+    stopTransport();
+    // If we were bouncing a song, finish the recording now so the share dialog opens.
+    if (songRec.active) stopSongRec();
+  });
+  document.getElementById("t-rec").addEventListener("click", ()=>{
+    ensureAudio();
+    if (songRec.active) stopSongRec();
+    else startSongRec();
+  });
+  document.getElementById("t-reset").addEventListener("click", ()=>{ stopTransport(); if (songRec.active) stopSongRec(); resetSequence(); });
+
+  // Share modal actions
+  document.getElementById("share-send").addEventListener("click", shareSong);
+  document.getElementById("share-save").addEventListener("click", downloadSong);
+  document.getElementById("share-close").addEventListener("click", closeShareModal);
+  document.getElementById("share-overlay").addEventListener("click", e=>{
+    if (e.target.id === "share-overlay") closeShareModal();
+  });
 
   // ---------- Knobs ----------
   const KNOB_DEFS = [
@@ -1680,6 +2385,27 @@
   setBPM(120);
   renderGrid();
   renderMoogKnobs();
+  buildPads();
+
+  // Sampler — REC / bank switch / reverse / clear bank
+  document.getElementById("rec-action").addEventListener("click", ()=>{
+    if (sampler.recording) stopSamplerRec();
+    else startSamplerRec();
+  });
+  document.getElementById("rec-clear").addEventListener("click", ()=>{
+    const bank = curBank();
+    bank.samples = new Array(PAD_COUNT).fill(null);
+    bank.armed = -1;
+    renderPads();
+  });
+  document.querySelectorAll(".bank-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>switchBank(btn.dataset.bank));
+  });
+  document.querySelectorAll(".mod-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if (btn.dataset.mod === "reverse") toggleReverse();
+    });
+  });
 
   // Prevent iOS double-tap zoom on cells
   document.addEventListener("dblclick", e=>e.preventDefault(), {passive:false});
