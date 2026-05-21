@@ -258,16 +258,19 @@
   }
   .beat-pip.flash{opacity:1; transform:scale(1.15);}
 
+  /* Engine-specific sections */
+  .moog-only{display:none;}
+  body[data-acc="moog"] .moog-only{display:block;}
+  body[data-acc="moog"] .non-moog{display:none;}
+
   /* Moog strip */
   .moog-strip{
     overflow-x:auto;
     overflow-y:hidden;
     -webkit-overflow-scrolling:touch;
-    padding:6px 12px 14px;
-    border-bottom:2px solid var(--ink);
-    display:none;
+    padding:0 12px 10px;
+    border-bottom:3px solid var(--ink);
   }
-  .moog-strip.visible{display:block;}
   .moog-strip-inner{
     display:flex;
     gap:14px;
@@ -300,6 +303,71 @@
   .knob .ring{stroke:var(--ink); stroke-width:2; fill:none;}
   .knob .arc{stroke:var(--blue); stroke-width:3; fill:none; stroke-linecap:butt;}
   .knob .ind{stroke:var(--ink); stroke-width:2.5;}
+
+  /* Live keyboard */
+  .keyboard-wrap{
+    padding:0 12px 10px;
+    border-bottom:3px solid var(--ink);
+  }
+  .keyboard{
+    position:relative;
+    width:100%;
+    height:195px;
+    display:flex;
+    border:3px solid var(--ink);
+    background:#fff;
+    touch-action:none;
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  .white-key{
+    flex:1;
+    border-right:2px solid var(--ink);
+    background:#fff;
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:10px;
+    font-family:"Bowlby One", "Archivo Black", sans-serif;
+    font-size:12px;
+    color:var(--ink-2);
+    transition:background .05s;
+  }
+  .white-key:last-child{border-right:none;}
+  .white-key.pressed{background:var(--cyan);}
+  .black-key{
+    position:absolute;
+    top:0;
+    width:8.5%;
+    height:62%;
+    background:var(--ink);
+    border:2px solid var(--ink);
+    transform:translateX(-50%);
+    z-index:2;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:4px;
+    font-family:"Space Mono", monospace;
+    font-size:8px;
+    font-weight:700;
+    color:#fff;
+    transition:background .05s, color .05s;
+  }
+  .black-key.pressed{background:var(--pink); color:var(--ink); border-color:var(--ink);}
+  .kbd-meta{
+    margin-top:4px;
+    display:flex;
+    justify-content:space-between;
+    font-family:"Space Mono", monospace;
+    font-size:9px;
+    font-weight:700;
+    color:var(--ink-2);
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .kbd-meta .now{color:var(--blue);}
 
   /* Tap tempo row */
   .tempo-row{
@@ -521,16 +589,45 @@
     <button class="fx-btn" data-fx="choke">Chke</button>
   </div>
 
-  <div class="section-label"><span>Sequence — 8 × 8</span><span class="meta"><span id="step-counter">01 / 08</span><span class="beat-pip" id="beat-pip"></span></span></div>
-
-  <div class="grid-wrap">
-    <div class="row-labels" id="row-labels"></div>
-    <div class="grid" id="grid"></div>
+  <!-- Moog tab: knobs section above keyboard -->
+  <div class="moog-only">
+    <div class="section-label"><span>Voice · Knobs</span><span class="meta" id="moog-note">2 osc · ladder</span></div>
+    <div class="moog-strip" id="moog-strip">
+      <div class="moog-strip-inner" id="moog-knobs"></div>
+    </div>
   </div>
 
-  <div class="moog-strip" id="moog-strip">
-    <div class="section-label" style="padding:14px 0 8px;"><span>Moog · Voice</span><span class="meta" id="moog-note">D minor · pent.</span></div>
-    <div class="moog-strip-inner" id="moog-knobs"></div>
+  <!-- 808/909 tabs: sequencer -->
+  <div class="non-moog">
+    <div class="section-label"><span>Sequence — 8 × 8</span><span class="meta"><span id="step-counter">01 / 08</span><span class="beat-pip" id="beat-pip"></span></span></div>
+    <div class="grid-wrap">
+      <div class="row-labels" id="row-labels"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+
+  <!-- Moog tab: live keyboard -->
+  <div class="moog-only">
+    <div class="section-label"><span>Keyboard</span><span class="meta"><span class="now" id="kbd-now">—</span><span style="margin-left:8px;">C3 — C4 · 1 oct</span></span></div>
+    <div class="keyboard-wrap">
+      <div class="keyboard" id="keyboard">
+        <!-- 8 white keys C3..C4 -->
+        <div class="white-key" data-note="C3"  data-hz="130.81">C</div>
+        <div class="white-key" data-note="D3"  data-hz="146.83">D</div>
+        <div class="white-key" data-note="E3"  data-hz="164.81">E</div>
+        <div class="white-key" data-note="F3"  data-hz="174.61">F</div>
+        <div class="white-key" data-note="G3"  data-hz="196.00">G</div>
+        <div class="white-key" data-note="A3"  data-hz="220.00">A</div>
+        <div class="white-key" data-note="B3"  data-hz="246.94">B</div>
+        <div class="white-key" data-note="C4"  data-hz="261.63">C</div>
+        <!-- 5 black keys -->
+        <div class="black-key" data-note="C#3" data-hz="138.59" style="left:12.5%"></div>
+        <div class="black-key" data-note="D#3" data-hz="155.56" style="left:25.0%"></div>
+        <div class="black-key" data-note="F#3" data-hz="185.00" style="left:50.0%"></div>
+        <div class="black-key" data-note="G#3" data-hz="207.65" style="left:62.5%"></div>
+        <div class="black-key" data-note="A#3" data-hz="233.08" style="left:75.0%"></div>
+      </div>
+    </div>
   </div>
 
   <div class="section-label"><span>Tempo</span><span class="meta" id="bpm-meta">120.0 BPM</span></div>
@@ -1048,6 +1145,63 @@
     });
   }
 
+  // ---------- Moog live keyboard ----------
+  let moogHeld = null; // currently held DOM key
+  function moogKeyOn(hz, vel){
+    ensureAudio();
+    if (ac.state === "suspended") ac.resume();
+    ensureMoog();
+    const t = ac.currentTime;
+    const port = state.moog.portamento;
+    moog.osc1.frequency.cancelScheduledValues(t);
+    moog.osc2.frequency.cancelScheduledValues(t);
+    moog.osc1.frequency.setTargetAtTime(hz, t, Math.max(0.0001, port));
+    moog.osc2.frequency.setTargetAtTime(hz, t, Math.max(0.0001, port));
+    moog.lastFreq = hz;
+
+    const a = state.moog.attack;
+    const d = state.moog.decay;
+    const s = state.moog.sustain;
+    const peak = (vel || 0.85) * 0.6;
+    const sus = peak * s;
+
+    const g = moog.vca.gain;
+    const currentG = g.value;
+    g.cancelScheduledValues(t);
+    g.setValueAtTime(currentG, t);
+    g.linearRampToValueAtTime(peak, t + Math.max(0.001, a));
+    g.linearRampToValueAtTime(sus, t + Math.max(0.001, a) + Math.max(0.001, d));
+
+    const baseCut = state.moog.cutoff;
+    const envAmt = state.moog.envAmt;
+    const peakCut = clamp(baseCut + envAmt * 6000, 30, 18000);
+    const sustainCut = clamp(baseCut + envAmt * 2000 * s, 30, 18000);
+    [moog.filter.frequency, moog.filter2.frequency].forEach(fp=>{
+      const curF = fp.value;
+      fp.cancelScheduledValues(t);
+      fp.setValueAtTime(curF, t);
+      fp.linearRampToValueAtTime(peakCut, t + Math.max(0.001, a));
+      fp.linearRampToValueAtTime(sustainCut, t + Math.max(0.001, a) + Math.max(0.001, d));
+    });
+  }
+  function moogKeyOff(){
+    if (!ac || !moog.vca) return;
+    const t = ac.currentTime;
+    const r = state.moog.release;
+    const g = moog.vca.gain;
+    const cur = g.value;
+    g.cancelScheduledValues(t);
+    g.setValueAtTime(cur, t);
+    g.linearRampToValueAtTime(0, t + Math.max(0.005, r));
+    const baseCut = state.moog.cutoff;
+    [moog.filter.frequency, moog.filter2.frequency].forEach(fp=>{
+      const curF = fp.value;
+      fp.cancelScheduledValues(t);
+      fp.setValueAtTime(curF, t);
+      fp.linearRampToValueAtTime(baseCut, t + Math.max(0.005, r));
+    });
+  }
+
   function velFromShape(shape, _v){
     switch(shape){
       case "circle": return 0.85;
@@ -1143,7 +1297,6 @@
   const labelsEl = document.getElementById("row-labels");
   const beatPip = document.getElementById("beat-pip");
   const stepCounter = document.getElementById("step-counter");
-  const moogStrip = document.getElementById("moog-strip");
   const moogKnobsEl = document.getElementById("moog-knobs");
 
   function shapeSVG(shape){
@@ -1273,7 +1426,6 @@
       state.engine = e;
       document.querySelectorAll(".engine-tab").forEach(x=>x.classList.toggle("active", x===t));
       document.documentElement.style.setProperty("--acc", accent());
-      moogStrip.classList.toggle("visible", e === "moog");
       document.getElementById("hdr-meta").textContent = (e.toUpperCase()) + " / 4·4";
       document.body.dataset.acc = e;
       // Update transport play color if playing
@@ -1284,6 +1436,49 @@
       renderGrid();
       renderMoogKnobs();
     });
+  });
+
+  // Mini live keyboard (Moog only)
+  const kbdEl = document.getElementById("keyboard");
+  const kbdNow = document.getElementById("kbd-now");
+  function keyAtPoint(x, y){
+    const el = document.elementFromPoint(x, y);
+    if (!el) return null;
+    if (el.classList && (el.classList.contains("white-key") || el.classList.contains("black-key"))) return el;
+    return null;
+  }
+  function pressKey(el){
+    if (!el || el === moogHeld) return;
+    if (moogHeld) moogHeld.classList.remove("pressed");
+    moogHeld = el;
+    el.classList.add("pressed");
+    moogKeyOn(parseFloat(el.dataset.hz), 0.9);
+    if (kbdNow) kbdNow.textContent = el.dataset.note;
+  }
+  function releaseKey(){
+    if (moogHeld) moogHeld.classList.remove("pressed");
+    moogHeld = null;
+    moogKeyOff();
+    if (kbdNow) kbdNow.textContent = "—";
+  }
+  kbdEl.addEventListener("pointerdown", e=>{
+    e.preventDefault();
+    kbdEl.setPointerCapture(e.pointerId);
+    pressKey(keyAtPoint(e.clientX, e.clientY));
+  });
+  kbdEl.addEventListener("pointermove", e=>{
+    if (!moogHeld) return;
+    pressKey(keyAtPoint(e.clientX, e.clientY));
+  });
+  const kbdRelease = e=>{
+    try{ kbdEl.releasePointerCapture(e.pointerId); }catch(_){}
+    releaseKey();
+  };
+  kbdEl.addEventListener("pointerup", kbdRelease);
+  kbdEl.addEventListener("pointercancel", kbdRelease);
+  kbdEl.addEventListener("pointerleave", e=>{
+    // only release if pointer fully leaves
+    if (moogHeld && !kbdEl.contains(document.elementFromPoint(e.clientX, e.clientY))) releaseKey();
   });
 
   // FX buttons
@@ -1481,6 +1676,7 @@
 
   // ---------- Init ----------
   document.documentElement.style.setProperty("--acc", accent());
+  document.body.dataset.acc = state.engine;
   setBPM(120);
   renderGrid();
   renderMoogKnobs();
