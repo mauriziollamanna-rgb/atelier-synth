@@ -788,7 +788,13 @@
   .share-actions .primary{ background:var(--lime); }
   .share-actions .secondary{ background:var(--cyan); }
   .share-actions .close{ background:#fff; flex:0 0 70px; font-size:11px; }
-  audio.preview{ width:100%; }
+  audio.preview, video.preview{
+    width:100%;
+    max-height:360px;
+    background:var(--ink);
+    border:3px solid var(--ink);
+    display:block;
+  }
 
   /* Misc */
   .footer-pad{height:8px;}
@@ -912,12 +918,15 @@
   </div>
 </div>
 
+<!-- Hidden visualizer canvas (rendered to video) -->
+<canvas id="vis-canvas" width="720" height="1280" style="position:fixed;left:-9999px;top:0;width:720px;height:1280px;"></canvas>
+
 <!-- Share modal -->
 <div class="share-overlay" id="share-overlay" aria-hidden="true">
   <div class="share-modal" role="dialog" aria-labelledby="share-title">
     <h3 id="share-title">Track Bounced</h3>
     <div class="meta" id="share-meta">— —</div>
-    <audio class="preview" id="share-audio" controls preload="auto"></audio>
+    <video class="preview" id="share-video" controls preload="auto" playsinline></video>
     <div class="share-actions">
       <button class="primary" id="share-send">Share</button>
       <button class="secondary" id="share-save">Save</button>
@@ -1032,6 +1041,12 @@
     fx.outBus = ac.createGain();
     fx.outBus.gain.value = 1;
     fx.outBus.connect(ac.destination);
+
+    // Visualizer analyser (reads from the same outBus so visuals match audio)
+    fx.visAnalyser = ac.createAnalyser();
+    fx.visAnalyser.fftSize = 2048;
+    fx.visAnalyser.smoothingTimeConstant = 0.55;
+    fx.outBus.connect(fx.visAnalyser);
 
     // Wire chain
     masterGain.connect(fx.filter);
@@ -1719,57 +1734,251 @@
     });
   }
 
-  // ---------- Song bounce + share ----------
+  // ---------- Song bounce: canvas-visualizer + audio → MP4 video ----------
+  // We render a Pop Art visualizer to a 720×1280 canvas at 30fps and combine
+  // canvas.captureStream() with a MediaStreamAudioDestinationNode tapped from
+  // fx.outBus. MediaRecorder emits MP4 on iOS Safari (H.264 + AAC) which
+  // WhatsApp/Messages/AirDrop all accept as a normal video file.
   const songRec = {
     active: false,
     recorder: null,
-    streamDest: null,
+    audioDest: null,
+    videoStream: null,
     chunks: [],
-    startedAt: 0,
+    rafId: null,
+    mime: "",
+    ext: "mp4",
     lastBlob: null,
-    lastUrl: null
+    lastUrl: null,
+    startedAt: 0
   };
 
-  function songRecMime(){
+  function pickVideoMime(){
     if (typeof MediaRecorder === "undefined" || !MediaRecorder.isTypeSupported) return "";
     const candidates = [
-      "audio/webm;codecs=opus",
-      "audio/mp4;codecs=mp4a.40.2",
-      "audio/ogg;codecs=opus",
-      "audio/webm",
-      "audio/mp4"
+      'video/mp4;codecs="avc1.42E01E,mp4a.40.2"', // iOS Safari MP4
+      'video/mp4',
+      'video/webm;codecs="vp9,opus"',
+      'video/webm;codecs="vp8,opus"',
+      'video/webm'
     ];
     for (const m of candidates) if (MediaRecorder.isTypeSupported(m)) return m;
     return "";
   }
-  function extFromMime(mime){
-    if (!mime) return "webm";
-    if (mime.includes("mp4")) return "m4a";
-    if (mime.includes("ogg")) return "ogg";
-    return "webm";
+  function extForMime(mime){
+    if (!mime) return "mp4";
+    if (mime.includes("mp4")) return "mp4";
+    if (mime.includes("webm")) return "webm";
+    return "mp4";
   }
 
-  function startSongRec(){
+  // ---- Visualizer renderer ----
+  function drawVisFrame(ctx, w, h){
+    // Background — cream
+    ctx.fillStyle = "#FFF4DC";
+    ctx.fillRect(0, 0, w, h);
+    // Ben-Day dots, sparse
+    ctx.fillStyle = "rgba(255,45,135,0.10)";
+    for (let y = 14; y < h; y += 22){
+      for (let x = 14; x < w; x += 22){
+        ctx.beginPath(); ctx.arc(x, y, 2, 0, Math.PI*2); ctx.fill();
+      }
+    }
+
+    // Yellow header band
+    ctx.fillStyle = "#FFD400";
+    ctx.fillRect(0, 0, w, 200);
+    ctx.fillStyle = "#0A0A0A";
+    ctx.fillRect(0, 200, w, 8);
+
+    // Title (with pink pop offset)
+    ctx.textBaseline = "middle";
+    ctx.font = '900 84px "Bowlby One", "Archivo Black", sans-serif';
+    ctx.fillStyle = "#FF2D87";
+    ctx.fillText("ATELIER 88", 56+5, 100+5);
+    ctx.fillStyle = "#0A0A0A";
+    ctx.fillText("ATELIER 88", 56, 100);
+
+    // Bauhaus mark (top-right of header)
+    const mx = w - 220, my = 70;
+    ctx.fillStyle = "#0A78FF"; ctx.beginPath(); ctx.arc(mx + 28, my + 60, 28, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = "#FFD400"; ctx.beginPath();
+    ctx.moveTo(mx + 90, my + 32); ctx.lineTo(mx + 120, my + 90); ctx.lineTo(mx + 60, my + 90);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#FF1F4D"; ctx.fillRect(mx + 130, my + 32, 58, 58);
+
+    // Engine chip
+    const engColor = accent();
+    ctx.fillStyle = engColor;
+    ctx.fillRect(60, 248, 280, 92);
+    ctx.strokeStyle = "#0A0A0A"; ctx.lineWidth = 6;
+    ctx.strokeRect(60, 248, 280, 92);
+    ctx.fillStyle = (state.engine === "909" ? "#0A0A0A" : "#fff");
+    ctx.font = '900 44px "Bowlby One", "Archivo Black", sans-serif';
+    ctx.fillText(state.engine.toUpperCase(), 84, 294);
+
+    // BPM right-aligned
+    ctx.fillStyle = "#0A0A0A";
+    ctx.font = '900 50px "Bowlby One", "Archivo Black", sans-serif';
+    ctx.textAlign = "right";
+    ctx.fillText(Math.round(state.bpm) + " BPM", w - 60, 294);
+    ctx.textAlign = "left";
+
+    // Big waveform (centered)
+    const waveData = new Uint8Array(fx.visAnalyser.fftSize);
+    fx.visAnalyser.getByteTimeDomainData(waveData);
+    ctx.strokeStyle = engColor;
+    ctx.lineWidth = 7;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    const waveTop = 420;
+    const waveH = 380;
+    const waveCenterY = waveTop + waveH/2;
+    const step = Math.max(1, Math.floor(waveData.length / w));
+    let firstX = 30, lastX = w - 30, drawW = lastX - firstX;
+    for (let i = 0, j = 0; i < waveData.length; i += step, j++){
+      const v = (waveData[i] - 128) / 128.0;
+      const x = firstX + (i / waveData.length) * drawW;
+      const y = waveCenterY + v * (waveH/2);
+      if (j === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    // Baseline
+    ctx.strokeStyle = "#0A0A0A";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 8]);
+    ctx.beginPath();
+    ctx.moveTo(firstX, waveCenterY);
+    ctx.lineTo(lastX, waveCenterY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 8-step indicator
+    const stepGap = 14;
+    const totalStepW = w - 120;
+    const stepBoxW = (totalStepW - 7 * stepGap) / 8;
+    const stepY = 880;
+    for (let i = 0; i < 8; i++){
+      const x = 60 + i * (stepBoxW + stepGap);
+      const isCurrent = state.playing && state.step === i;
+      ctx.fillStyle = isCurrent ? "#FF2D87" : "#FFFFFF";
+      ctx.fillRect(x, stepY, stepBoxW, 96);
+      ctx.strokeStyle = "#0A0A0A"; ctx.lineWidth = 5;
+      ctx.strokeRect(x, stepY, stepBoxW, 96);
+      // step number
+      ctx.fillStyle = isCurrent ? "#fff" : "#0A0A0A";
+      ctx.font = '900 38px "Bowlby One", "Archivo Black", sans-serif';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(i+1), x + stepBoxW/2, stepY + 48);
+    }
+    ctx.textAlign = "left";
+
+    // Footer: timestamp + REC indicator
+    const elapsed = ac ? Math.max(0, ac.currentTime - songRec.startedAt) : 0;
+    const mins = Math.floor(elapsed / 60);
+    const secs = Math.floor(elapsed % 60);
+    const tenths = Math.floor((elapsed * 10) % 10);
+    const tstamp = `${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}.${tenths}`;
+    ctx.fillStyle = "#0A0A0A";
+    ctx.font = '700 42px "Space Mono", monospace';
+    ctx.textBaseline = "middle";
+    ctx.fillText(tstamp, 60, h - 110);
+
+    // Rec pulse dot
+    const pulse = 0.5 + 0.5*Math.sin(performance.now()/400);
+    ctx.fillStyle = `rgba(255, 31, 77, ${pulse})`;
+    ctx.beginPath(); ctx.arc(w - 140, h - 110, 22, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = "#0A0A0A"; ctx.lineWidth = 4;
+    ctx.stroke();
+    ctx.fillStyle = "#0A0A0A";
+    ctx.font = '900 30px "Bowlby One", "Archivo Black", sans-serif';
+    ctx.textAlign = "right";
+    ctx.fillText("REC", w - 60, h - 110 + 2);
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+  }
+
+  function startVisLoop(){
+    const canvas = document.getElementById("vis-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let last = 0;
+    const interval = 1000/30; // 30fps
+    function tick(now){
+      if (!songRec.active) return;
+      if (!last || now - last >= interval){
+        drawVisFrame(ctx, canvas.width, canvas.height);
+        last = now;
+      }
+      songRec.rafId = requestAnimationFrame(tick);
+    }
+    // Prime one frame so captureStream has data immediately
+    drawVisFrame(ctx, canvas.width, canvas.height);
+    songRec.rafId = requestAnimationFrame(tick);
+  }
+  function stopVisLoop(){
+    if (songRec.rafId){ cancelAnimationFrame(songRec.rafId); songRec.rafId = null; }
+  }
+
+  async function startSongRec(){
     ensureAudio();
-    if (ac.state === "suspended") ac.resume();
+    if (ac.state === "suspended") await ac.resume();
     if (songRec.active) return;
     if (!fx.outBus){ console.warn("no outBus"); return; }
-    if (typeof MediaRecorder === "undefined"){
-      alert("Recording isn't supported in this browser.");
+    if (typeof MediaRecorder === "undefined" || !HTMLCanvasElement.prototype.captureStream){
+      alert("Video recording isn't supported in this browser.");
       return;
     }
-    songRec.streamDest = ac.createMediaStreamDestination();
-    fx.outBus.connect(songRec.streamDest);
-    const mime = songRecMime();
-    songRec.recorder = mime
-      ? new MediaRecorder(songRec.streamDest.stream, { mimeType: mime })
-      : new MediaRecorder(songRec.streamDest.stream);
+    // Ensure fonts are ready so canvas text doesn't fall back to sans-serif
+    if (document.fonts && document.fonts.ready){
+      try { await document.fonts.ready; } catch(_){}
+    }
+
+    // Audio destination
+    const audioDest = ac.createMediaStreamDestination();
+    fx.outBus.connect(audioDest);
+
+    // Canvas video stream
+    const canvas = document.getElementById("vis-canvas");
+    const videoStream = canvas.captureStream(30);
+
+    // Combine
+    const combined = new MediaStream();
+    videoStream.getVideoTracks().forEach(t => combined.addTrack(t));
+    audioDest.stream.getAudioTracks().forEach(t => combined.addTrack(t));
+
+    const mime = pickVideoMime();
+    let recorder;
+    try {
+      recorder = mime
+        ? new MediaRecorder(combined, { mimeType: mime, videoBitsPerSecond: 2_500_000, audioBitsPerSecond: 128_000 })
+        : new MediaRecorder(combined);
+    } catch(err){
+      alert("Couldn't start video recorder: " + err.message);
+      try { fx.outBus.disconnect(audioDest); } catch(_){}
+      return;
+    }
+
+    songRec.audioDest = audioDest;
+    songRec.videoStream = videoStream;
+    songRec.recorder = recorder;
     songRec.chunks = [];
-    songRec.recorder.ondataavailable = e => { if (e.data && e.data.size > 0) songRec.chunks.push(e.data); };
-    songRec.recorder.onstop = () => {
-      try { fx.outBus.disconnect(songRec.streamDest); } catch(_){}
-      const blobMime = songRec.chunks[0]?.type || mime || "audio/webm";
-      const blob = new Blob(songRec.chunks, { type: blobMime });
+    songRec.mime = mime;
+    songRec.ext = extForMime(mime);
+    songRec.startedAt = ac.currentTime;
+
+    recorder.ondataavailable = e => { if (e.data && e.data.size > 0) songRec.chunks.push(e.data); };
+    recorder.onstop = ()=>{
+      try { fx.outBus.disconnect(audioDest); } catch(_){}
+      videoStream.getVideoTracks().forEach(t=>t.stop());
+      stopVisLoop();
+
+      const blobMime = songRec.mime || "video/mp4";
+      const cleanMime = blobMime.split(";")[0];
+      const blob = new Blob(songRec.chunks, { type: cleanMime });
       songRec.lastBlob = blob;
       if (songRec.lastUrl) URL.revokeObjectURL(songRec.lastUrl);
       songRec.lastUrl = URL.createObjectURL(blob);
@@ -1777,11 +1986,12 @@
       document.getElementById("t-rec").classList.remove("recording");
       openShareModal(blob, songRec.lastUrl);
     };
-    songRec.recorder.start();
+
     songRec.active = true;
-    songRec.startedAt = ac.currentTime;
+    recorder.start();
+    startVisLoop();
+
     document.getElementById("t-rec").classList.add("recording");
-    // Auto-start transport if not already playing so the user gets audio in the recording.
     if (!state.playing) startTransport();
   }
 
@@ -1798,13 +2008,15 @@
 
   function openShareModal(blob, url){
     const overlay = document.getElementById("share-overlay");
-    const audio = document.getElementById("share-audio");
+    const video = document.getElementById("share-video");
     const meta = document.getElementById("share-meta");
-    audio.src = url;
-    audio.onloadedmetadata = () => {
-      const sizeKb = Math.round(blob.size/1024);
-      meta.textContent = `${fmtDuration(audio.duration)} · ${sizeKb} kb · ${blob.type.split(";")[0]}`;
+    video.src = url;
+    const sizeKb = Math.round(blob.size/1024);
+    const sizeStr = sizeKb >= 1024 ? (sizeKb/1024).toFixed(1)+" mb" : sizeKb+" kb";
+    video.onloadedmetadata = ()=>{
+      meta.textContent = `${fmtDuration(video.duration)} · ${sizeStr} · ${blob.type.split(";")[0]}`;
     };
+    meta.textContent = `${sizeStr} · ${blob.type.split(";")[0]}`;
     overlay.classList.add("open");
     overlay.setAttribute("aria-hidden", "false");
   }
@@ -1812,20 +2024,22 @@
     const overlay = document.getElementById("share-overlay");
     overlay.classList.remove("open");
     overlay.setAttribute("aria-hidden", "true");
-    const audio = document.getElementById("share-audio");
-    audio.pause();
+    const video = document.getElementById("share-video");
+    try { video.pause(); } catch(_){}
   }
 
   function songFilename(){
     const d = new Date();
     const pad = n=>String(n).padStart(2,"0");
     const stamp = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
-    return `atelier88-${stamp}.${extFromMime(songRec.lastBlob?.type || "")}`;
+    return `atelier88-${stamp}.${songRec.ext || "mp4"}`;
   }
 
   async function shareSong(){
     if (!songRec.lastBlob) return;
-    const file = new File([songRec.lastBlob], songFilename(), { type: songRec.lastBlob.type });
+    // Use clean container MIME (no codec params) so messaging apps accept the file.
+    const cleanType = (songRec.lastBlob.type || "").split(";")[0] || (songRec.ext === "webm" ? "video/webm" : "video/mp4");
+    const file = new File([songRec.lastBlob], songFilename(), { type: cleanType });
     try {
       if (navigator.canShare && navigator.canShare({ files: [file] })){
         await navigator.share({
