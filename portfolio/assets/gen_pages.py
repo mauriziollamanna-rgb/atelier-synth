@@ -5,7 +5,7 @@ and colour as the page hero."""
 
 import re, os, html
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = "/Users/mauriziolamanna/Desktop/VicRoads Designs VTS/maurizio-portfolio"
 INDEX = os.path.join(ROOT, "index.html")
 OUTDIR = os.path.join(ROOT, "work")
 os.makedirs(OUTDIR, exist_ok=True)
@@ -31,167 +31,185 @@ for slug, (tags, colour, svg, title, tagline) in zip(SLUGS, cards):
 P = {}  # per-page content
 
 P["vicroads-vehicle-transfer"] = dict(
-    num="01", sub="Designing a safer way to buy and sell a used car in Victoria, with payments held in escrow.",
+    num="01", sub="Escrow-backed vehicle transfers, designed end to end and proven buildable.",
     meta=[("Client", "VicRoads"), ("Type of work", "Service &amp; product design"),
           ("Date", "April – July 2026"), ("My role", "Design lead · 10-week discovery")],
-    intro="VicRoads wanted to know if an escrow-backed vehicle transfer service could be built, and what "
-          "it would cost. We spent ten weeks finding out, designing the buyer and seller experience in "
-          "myVicRoads and connecting it to Shaype's escrow platform.",
+    intro="A 10-week discovery to prove feasibility, size the effort and de-risk a production-grade "
+          "Vehicle Transfer Service — the full buyer and seller experience through myVicRoads, wired "
+          "into Shaype's escrow platform.",
     sections=[
-        ("The ask", ["Prove the service was feasible, estimate the build, and give VicRoads enough "
-          "material to take into a business case.",
-          "I led design alongside three lead engineers, working closely with VicRoads Product and "
-          "Shaype's integration team."]),
+        ("The ask", ["VicRoads wanted to know whether an escrow-backed vehicle transfer service could "
+          "actually be built — and what it would take. Over ten weeks we designed and prototyped the "
+          "full buyer/seller experience, sized the build effort, and packaged everything so it could "
+          "go straight into a future business case.",
+          "I led the design alongside three Lead Engineers, working shoulder-to-shoulder with VicRoads "
+          "Product and Shaype's integration team."]),
         ("My role", None),
         ("The outcome", None),
     ],
-    role=["<b>Experience map:</b> mapped the buyer and seller journeys with VicRoads, so everyone could "
-          "see the whole service on one page.",
-          "<b>Journeys and edge cases:</b> designed the primary, secondary and tertiary paths, plus the "
-          "alternate flows and error states.",
-          "<b>Demo:</b> worked with the engineers on a React Native demo for the business case.",
-          "<b>Requirements:</b> worked through payments and edge cases with VicRoads and Shaype early, "
-          "while they were still cheap to change.",
-          "<b>Handover:</b> wrote up the flows, rules and error states as epics the build team can pick "
-          "up directly."],
-    outcome=["<b>The escrow model works.</b> Funds sit in a joint account and are split automatically "
-          "between the seller, SRO, VicRoads and VTS Premium at handover. We designed and tested this "
-          "end to end.",
-          "<b>Five build-ready epics</b> covering flow steps, alternate flows and error scenarios.",
-          "<b>A demo people could use.</b> Stakeholders could click through the service themselves, which "
-          "brought up UX and technical questions early.",
-          "<b>A build estimate VicRoads can defend,</b> with a recommended plan and team structure."],
+    role=["<b>Experience mapping:</b> built the VTS Experience Map with VicRoads — a visual, "
+          "high-level journey covering both buyer and seller, showing the flexibility in the overall design.",
+          "<b>Golden path &amp; UX design:</b> designed the primary, secondary and tertiary paths across "
+          "the end-to-end journey, alongside alternate flows and error scenarios.",
+          "<b>Prototyping &amp; demo:</b> collaborated on a React Native demo — a key artefact for the "
+          "future business case.",
+          "<b>Requirements &amp; estimation:</b> gathered requirements across payments and the end-to-end "
+          "design, aligning VicRoads and Shaype on edge cases upfront so nothing bites in the build phase.",
+          "<b>Documentation for handover:</b> turned ten weeks of decisions into build-ready epic "
+          "documentation — flows, rules and error states."],
+    outcome=["<b>Proved the hardest part works:</b> designed and validated the Shaype escrow model end to "
+          "end — funds locked in a joint account and split automatically across Seller, SRO, VicRoads "
+          "and VTS Premium on handover.",
+          "<b>Foundational documentation:</b> five epics covering flow steps, alternate flows and error "
+          "scenarios, so the build team can hit the ground running.",
+          "<b>Made it real, not theoretical:</b> a working React Native demo turned an abstract pitch into "
+          "something stakeholders could hold and click through, surfacing UX and technical decisions while "
+          "they were still cheap to change.",
+          "<b>De-risked a multi-million dollar decision:</b> turned an ambition into a defensible "
+          "effort-to-build number, with a recommended plan and team structure attached."],
     stats=[("10", "week discovery"), ("5", "build-ready epics"), ("4-way", "escrow payment split")],
     related=["vicroads-learner-permit", "toll-movemaestro", "belong-north-star"])
 
 P["vicroads-learner-permit"] = dict(
-    num="02", sub="Rethinking the learner permit test for mobile, with an AI study companion.",
+    num="02", sub="Reimagining how Victorians learn to drive — mobile-first, with an AI companion.",
     meta=[("Client", "VicRoads"), ("Type of work", "Strategy &amp; product design"),
           ("Date", "November 2025 – February 2026"), ("My role", "Project lead · 8-week discovery")],
-    intro="An eight-week discovery into the Learner Permit Test and Hazard Perception Test: what the "
-          "experience should be, and which platform VicRoads should build it on.",
+    intro="An 8-week discovery reimagining the Learner Permit Test and Hazard Perception Test experience, "
+          "while identifying the future-proof platform the VicRoads test should move to.",
     sections=[
-        ("The ask", ["Redesign the LPT/HPT experience for mobile, recommend a platform that could scale "
-          "and pay its way, and make a case strong enough to get executive funding.",
-          "I led a team of three: me, another senior designer and a tech lead. We had daily standups "
-          "with VicRoads, ran SME workshops, and played back to senior stakeholders every week."]),
+        ("The ask", ["Reimagine the LPT/HPT experience and recommend the right platform to design and "
+          "build a mobile-first, frictionless test that is scalable, has a commercial outlook, and secures "
+          "executive funding.",
+          "Our team was myself as project lead, another senior designer and a tech lead, working closely "
+          "with the VicRoads team — daily standups, multiple SME workshops and a weekly playback with "
+          "high-level stakeholders to keep alignment from beginning to end."]),
         ("My role", None),
         ("The outcome", None),
     ],
-    role=["<b>Research:</b> ran six internal SME sessions and went through customer feedback. Language "
-          "barriers and a clunky interface came up again and again.",
-          "<b>Experience map:</b> designed a six-stage target state, from first study session to "
-          "licence issue.",
-          "<b>UI design:</b> high-fidelity, mobile-first designs for web and app.",
-          "<b>Tech:</b> worked with the tech leads so the designs fit the recommended Open edX hybrid "
-          "platform."],
-    outcome=["<b>A future-state experience map,</b> including longer-term ideas like AI cheating "
-          "detection and online eye tests.",
-          "<b>“Ask Lara”,</b> an AI study companion that gives help specific to each page and adapts to "
-          "how each learner studies.",
-          "<b>Road safety features</b> grounded in research, like spaced repetition to help people "
-          "retain what they learn, and “Results Wrapped”, which shares what the community is getting "
-          "right and wrong.",
-          "<b>A white-label front end.</b> The UI is headless and themed through configuration, so other "
-          "states like NSW could use it.",
-          "<b>VicRoads owns the IP.</b> The open-source hybrid model saves money and opens up revenue "
-          "from reselling."],
+    role=["<b>Stakeholder &amp; customer research:</b> ran six internal SME sessions and analysed customer "
+          "feedback to identify pain points like language barriers and interface friction.",
+          "<b>Experience mapping:</b> designed the Target State Experience — a six-stage strategic "
+          "blueprint from research to final licence issuance.",
+          "<b>Prototyping &amp; UI design:</b> delivered high-fidelity, mobile-first designs for both web "
+          "and app.",
+          "<b>Cross-functional collaboration:</b> partnered with technical leads to keep design solutions "
+          "viable within the recommended Open edX hybrid platform."],
+    outcome=["<b>The future-state experience map:</b> a strategic blueprint for the ideal journey, with "
+          "future ideas like AI anti-cheat detection and online eye tests.",
+          "<b>“Ask Lara” AI companion:</b> a smart assistant providing continuous learning, page-specific "
+          "support and training that adapts to individual learning styles.",
+          "<b>Road safety uplift:</b> research-backed features like “Results Wrapped” — turning personal "
+          "assessment into community learning — and spaced repetition to combat knowledge decay.",
+          "<b>Scalable, white-label framework:</b> a headless UI architecture with configuration-driven "
+          "theming, ready to white-label for other jurisdictions like Service NSW.",
+          "<b>Commercial sovereignty:</b> the open-source hybrid model gives VicRoads full IP ownership — "
+          "significant cost savings and new revenue streams through reselling."],
     stats=[("8", "week discovery"), ("6", "SME research sessions"), ("6-stage", "target state blueprint")],
     related=["vicroads-vehicle-transfer", "drive-marketplace", "medibank-health-app"])
 
 P["anz-vision-pro"] = dict(
-    num="03", sub="One of the first banking experiences built for Apple Vision Pro in Australia.",
+    num="03", sub="One of Australia's first banking experiences in spatial computing.",
     meta=[("Client", "ANZ"), ("Type of work", "Spatial computing"),
           ("Date", "June – July 2025"), ("My role", "Experience designer")],
-    intro="ANZ Institutional runs an expo to show key clients its digital roadmap. They asked Mantel to "
-          "rethink it.",
+    intro="ANZ's institutional arm is the No. 1 institutional bank across Australia and New Zealand. To "
+          "better engage key banking clients and showcase its digital roadmap, ANZ asked Mantel to "
+          "reimagine its traditional banking expo.",
     sections=[
-        ("The problem", ["ANZ works across 32 markets and has more than 8.5 million customers. A physical "
-          "expo is expensive to run and only reaches the people in the room. ANZ wanted something it "
-          "could take anywhere."]),
-        ("The design", ["We designed an interactive expo for Apple Vision Pro:",
-          "<ul><li>Guided scenarios, presented by an AI avatar.</li>"
-          "<li>A 3D map of the expo floor.</li>"
-          "<li>A virtual theatrette where remote clients can watch the keynotes.</li></ul>",
-          "It can be adapted for different pitches, events and markets."]),
+        ("The problem", ["As one of Australia's Big Four banks, ANZ operates across 32 markets and serves "
+          "over 8.5 million customers. Its traditional expo format carried heavy logistical and cost "
+          "burdens, and could only reach the people physically in the room. The goal: transform the event "
+          "into a scalable, interactive experience."]),
+        ("The design", ["We created a pioneering interactive experience for the Apple Vision Pro headset:",
+          "<ul><li>Hyper-engaging, guided scenarios led by an AI avatar.</li>"
+          "<li>A dynamic Interactive Expo Map — a 3D representation of the event.</li>"
+          "<li>A Virtual Theatrette where remote customers watch keynote speakers.</li></ul>",
+          "The entire concept was designed to be scalable and adaptable — specific pitches, different "
+          "expos, any market."]),
         ("The outcome", None),
     ],
     role=None,
-    outcome=["<b>More engaging than a booth.</b> Clients work through real examples rather than "
-          "reading a stand.",
-          "<b>Shown at SIBOS.</b> ANZ became the first bank to complete a proof of concept on the "
-          "headset.",
-          "<b>Cheaper to run.</b> ANZ can hold the expo anywhere, and estimates savings of up to $200,000 "
-          "per physical event.",
-          "<b>A competitive edge</b> that could help ANZ in the Peter Lee survey."],
+    outcome=["<b>Enhanced customer experience:</b> real-life examples and guided scenarios lift engagement "
+          "beyond what a physical booth can do.",
+          "<b>Broader reach:</b> the interactive demo was showcased at the SIBOS conference — making ANZ "
+          "the first bank to complete a proof of concept with the technology.",
+          "<b>Scalable framework:</b> ANZ can now run the expo anytime, anywhere, with potential savings "
+          "of up to $200,000 per physical event.",
+          "<b>Strategic advantage:</b> a “game changer” platform with competitive upside, including a "
+          "potential Peter Lee survey win."],
     stats=[("$200K", "potential saving per event"), ("1st", "bank to POC Vision Pro"), ("32", "markets reachable")],
     related=["safety-sphere", "nib-cyber-assurance", "medibank-health-app"])
 
 P["toll-movemaestro"] = dict(
-    num="04", sub="A shared vision for how relocations should work, for customers, clients, staff and suppliers.",
+    num="04", sub="A target-state vision for relocations that aligned four user groups around one experience.",
     meta=[("Client", "Toll Group"), ("Type of work", "Service design &amp; strategy"),
           ("Date", "January – March 2025"), ("My role", "Experience designer")],
-    intro="Toll Transitions relocates employees and their families for the ADF, Home Affairs and "
-          "corporate clients. Its systems were holding the business back, technically and commercially.",
+    intro="Toll Transitions manages employee and family relocations for the ADF, Home Affairs and "
+          "corporate businesses. Existing systems were insufficient — posing technical and commercial "
+          "risks to future growth.",
     sections=[
-        ("The ask", ["Design the ideal moving experience in MoveMaestro for Toll's customers, clients, "
-          "employees and suppliers."]),
-        ("Our approach", ["<b>Understand:</b> interviewed staff and customers to test the target state "
-          "and find the pain points.",
-          "<b>Design:</b> low-fidelity flows for customers, Toll staff, clients and suppliers, reviewed "
-          "with Toll's SMEs.",
-          "<b>Prototype:</b> high-fidelity screens, technology recommendations and a high-level "
-          "roadmap."]),
+        ("The ask", ["Create a target-state vision and ideal moving experience for Toll customers, "
+          "clients, employees and suppliers using MoveMaestro."]),
+        ("Our approach", ["<b>Capture the vision:</b> validated the target-state experience through "
+          "internal and customer interviews, addressing pain points and opportunities.",
+          "<b>Create the experience:</b> low-fidelity designs for the Customer, Toll, Client and Supplier "
+          "flows, aligned with Toll SMEs.",
+          "<b>Bring it to life:</b> high-fidelity screens of the target state, technology "
+          "recommendations, and a high-level roadmap."]),
         ("The outcome", None),
     ],
     role=None,
-    outcome=["<b>A vision map</b> that showed every interaction in one place and gave stakeholders a "
-          "clear direction.",
-          "<b>Service and journey maps</b> the team used to agree on improvements and make decisions.",
-          "<b>A high-fidelity prototype</b> that got clients excited."],
+    outcome=["<b>The vision map:</b> gave stakeholders a clear strategic direction and a holistic view of "
+          "every interaction — the anchor for alignment.",
+          "<b>The service &amp; journey map:</b> enabled practical alignment on improvements, supported "
+          "informed decision-making and drove strategic discussions.",
+          "<b>High-fidelity prototype &amp; screens:</b> a tangible representation of the future "
+          "experience that generated real excitement among clients."],
     stats=[("4", "user groups aligned"), ("1", "shared future vision"), ("3", "phase approach")],
     related=["vicroads-vehicle-transfer", "belong-north-star", "stringline-redesign"])
 
 P["alfred-health-ml"] = dict(
-    num="05", sub="Designing how clinicians would use a model that predicts blood transfusions.",
+    num="05", sub="Making a machine-learning model usable — and fundable.",
     meta=[("Client", "Alfred Health"), ("Type of work", "UX &amp; research"),
           ("Date", "June – July 2024"), ("My role", "UX designer")],
-    intro="Alfred Health asked Mantel whether a machine learning model could predict which patients "
-          "would need a red blood cell transfusion.",
+    intro="Alfred Health engaged Mantel to explore whether a machine-learning model could predict which "
+          "patients would need a red blood cell transfusion.",
     sections=[
-        ("The ask", ["Part of the work was moving the data team from a largely manual, bespoke setup to "
-          "Databricks, with a roadmap for their ML Ops.",
-          "My part was the people using it: making the model's predictions clear enough for clinicians "
-          "and analysts to trust."]),
+        ("The ask", ["The project involved uplifting the data analytics team's approach to ML Ops and "
+          "providing a roadmap to migrate them from a bespoke, largely manual solution onto a scalable "
+          "Databricks implementation.",
+          "The design challenge: make a highly technical prediction model legible and trustworthy for "
+          "the clinicians and analysts who would rely on it."]),
         ("My role", None),
-        ("The outcome", ["High-fidelity prototypes showing how clinicians would use the prediction "
-          "service. They helped the team agree on direction and secure funding for the next phase."]),
+        ("The outcome", ["High-fidelity prototypes that showed what the prediction service could look "
+          "like in clinicians' hands — clear enough to align the team and compelling enough to help "
+          "secure future funding for the program."]),
     ],
-    role=["Defined the problem with the client.",
-          "Interviewed key users to understand their journey.",
-          "Ran an ideation workshop with clinical and data stakeholders.",
-          "Designed high-fidelity prototypes for the funding pitch."],
+    role=["Defined the problem together with the client.",
+          "Understood the user journey through interviews with key users.",
+          "Facilitated an ideation workshop across clinical and data stakeholders.",
+          "Delivered high-fidelity prototypes used to secure future funding."],
     outcome=None,
     stats=None,
     related=["nib-cyber-assurance", "medibank-health-app", "vicroads-learner-permit"])
 
 P["safety-sphere"] = dict(
-    num="06", sub="Mantel's first project designing for Apple Vision Pro.",
-    meta=[("Client", "Mantel (internal R&amp;D)"), ("Type of work", "Spatial computing"),
+    num="06", sub="Mantel's first foray into designing for Apple Vision Pro.",
+    meta=[("Client", "Mantel — internal R&amp;D"), ("Type of work", "Spatial computing"),
           ("Date", "May – June 2024"), ("My role", "Designer")],
-    intro="An internal project to build up Mantel's skills on Apple Vision Pro. We built a demo app to "
-          "show clients what we could do in spatial computing.",
+    intro="An internal initiative to uplift Mantel's capability on Apple Vision Pro — our first demo app "
+          "built to show clients what we can design and deliver in spatial computing.",
     sections=[
-        ("The ask", ["We hadn't done client work in visionOS yet, so we needed a working demo of our own "
-          "first."]),
+        ("The ask", ["Before ANZ, before client work in visionOS, we needed our own proof: a working "
+          "demo experience that showed we could take spatial computing from idea to hardware."]),
         ("My role", None),
-        ("The outcome", ["A working Vision Pro demo, built with our developers. It led to client work in "
-          "spatial computing, including ANZ's Digital Expo."]),
+        ("The outcome", ["A working Vision Pro demo, delivered with our development team — the "
+          "capability foundation that later won and shaped client engagements in spatial computing, "
+          "including ANZ's Digital Expo."]),
     ],
-    role=["Ran an ideation workshop with internal stakeholders.",
-          "Storyboarded the experience.",
-          "Designed the high-fidelity Vision Pro screens.",
-          "Worked with the developers to ship the demo."],
+    role=["Aligned internal stakeholders through an ideation workshop.",
+          "Created the storyboard for the proposed experience.",
+          "Delivered high-fidelity Vision Pro designs.",
+          "Collaborated with the development team to ship a working demo."],
     outcome=None,
     stats=None,
     related=["anz-vision-pro", "stringline-redesign", "alfred-health-ml"])
@@ -200,119 +218,128 @@ P["medibank-health-app"] = dict(
     num="07", sub="What if your body came with a service manual?",
     meta=[("Client", "Medibank Ventures"), ("Type of work", "Product &amp; UX"),
           ("Date", "April – May 2024"), ("My role", "UX designer · 3-week engagement")],
-    intro="Medibank Ventures had an idea: what if your body came with a service manual? They brought me "
-          "in to help show what a preventative health service could look like.",
+    intro="Medibank Ventures had a great question: what if your body came with a service manual? I was "
+          "engaged to help create a vision and visual narrative around preventative health.",
     sections=[
-        ("The ask", ["Over three weeks I worked with the Lead Product Designer and a GP from MyHealth "
-          "Medical Centre to make the idea concrete enough to get stakeholders behind it."]),
+        ("The ask", ["Over three weeks I worked closely with the Lead Product Designer, in consultation "
+          "with a GP from the MyHealth Medical Centre, to make the concept tangible enough to win "
+          "stakeholder buy-in."]),
         ("What I made", None),
-        ("The outcome", ["A clickable, animated prototype, presented company-wide, that made an abstract "
-          "idea feel like a product Medibank could build."]),
+        ("The outcome", ["A company-wide presentation that put a clickable, animated future in front of "
+          "wider stakeholders — turning an abstract preventative-health concept into something people "
+          "could see themselves shipping."]),
     ],
-    role=["A journey map that follows someone from their health “service manual” to a booked "
-          "preventative appointment.",
-          "High-fidelity, animated screens for the whole journey, from learning about your health to "
-          "booking a GP.",
-          "The company-wide presentation used to bring more stakeholders on board."],
+    role=["A user journey map showing a health journey — the “service manual” — leading into a booked, "
+          "pre-scheduled preventative appointment.",
+          "Designed, prototyped and animated high-fidelity screens of the entire journey, from uncovering "
+          "your health story to booking a GP appointment.",
+          "Created the company-wide presentation used to bring wider stakeholders on board."],
     outcome=None,
     stats=None,
     related=["alfred-health-ml", "vicroads-learner-permit", "nib-cyber-assurance"])
 
 P["stringline-redesign"] = dict(
-    num="08", sub="What started as a UI refresh became a rebuild of every flow, ahead of the MVP launch.",
+    num="08", sub="From UI uplift to a ground-up rebuild of every flow — in time for MVP launch.",
     meta=[("Client", "Stringline"), ("Type of work", "Product &amp; UX"),
           ("Date", "February – April 2024"), ("My role", "Product designer")],
-    intro="Stringline is a startup that helps tradespeople and small service businesses with quoting, "
-          "invoicing and scheduling.",
+    intro="Stringline is a startup helping sole traders and businesses in trades and services streamline "
+          "their business — quoting, invoicing and scheduling.",
     sections=[
-        ("The ask", ["The app was about to launch, and the brief was to refresh the UI. Once I looked "
-          "closely, the flows were the bigger problem: people had to work too hard to get simple things "
-          "done. So we rebuilt them.",
-          "I worked with the founder and their developer every day, using what we learned in user "
-          "interviews and by walking through each task together."]),
+        ("The ask", ["With the app's release imminent, the original ask was a UI uplift of the existing "
+          "screens. On closer examination, the flows demanded a lot of cognitive effort and exploration "
+          "for users to achieve what they needed — so the engagement became a rebuild.",
+          "Working side-by-side with the client and their developer, flows were rebuilt from findings "
+          "from user interviews and from stepping through user objectives together."]),
         ("The outcome", None),
     ],
     role=None,
-    outcome=["<b>30+ flows</b> redesigned across web and mobile.",
+    outcome=["<b>30+ flows</b> reimagined and optimised across web and mobile.",
           "<b>100+ screens</b> designed for the MVP.",
-          "<b>38+ playbacks</b> with the founder in daily standups.",
-          "<b>5 rounds of user testing</b> to check the flows before launch."],
-    stats=[("30+", "flows redesigned"), ("100+", "screens designed"), ("5", "rounds of user testing")],
+          "<b>38+ client playbacks</b> as part of daily standups — decisions made with the founder, not "
+          "for them.",
+          "<b>5 user tests</b> to provide direction and validate flows before launch."],
+    stats=[("30+", "flows reimagined"), ("100+", "screens designed"), ("5", "rounds of user testing")],
     related=["drive-marketplace", "toll-movemaestro", "safety-sphere"])
 
 P["nib-cyber-assurance"] = dict(
-    num="09", sub="A dashboard that helps nib's security team explain cyber risk to executives.",
+    num="09", sub="Turning cyber-risk data into a conversation executives can actually have.",
     meta=[("Client", "nib"), ("Type of work", "Product &amp; research"),
           ("Date", "September – November 2023"), ("My role", "Associate designer")],
-    intro="nib's cyber team found it hard to explain cyber risk to the business and its executives. "
-          "They wanted a data-backed platform showing how well their controls were working.",
+    intro="The nib cyber team were struggling to communicate cyber risks to the business and its "
+          "executives. They wanted a continuous assurance platform, backed by data, that could carry the "
+          "conversation about the effectiveness of cyber controls.",
     sections=[
-        ("The ask", ["Design a dashboard that lets a technical team brief non-technical executives, "
-          "with the data still there for anyone who wants to dig in."]),
+        ("The ask", ["Design the dashboard experience that would let a technical security team brief "
+          "non-technical executives — without losing the data underneath."]),
         ("My role", None),
-        ("The outcome", ["The cyber team now uses a dashboard, built on nib's own data, to report the "
-          "status of its controls to executives."]),
+        ("The outcome", ["The nib cyber team now have a cyber security dashboard backed by the data "
+          "within their organisation, used to communicate the status of cyber controls to the "
+          "executive."]),
     ],
-    role=["Interviewed the security team and its stakeholders.",
-          "Created journey maps, personas and use cases for the dashboard.",
-          "Built the story map and split the features into releases."],
+    role=["Performed user interviews across the security team and its stakeholders.",
+          "Created journey maps, personas and business use cases for the dashboard.",
+          "Built the story map and feature list, divided into releases."],
     outcome=None,
     stats=None,
     related=["alfred-health-ml", "anz-vision-pro", "drive-marketplace"])
 
 P["drive-marketplace"] = dict(
-    num="10", sub="Running design sprints with Nine's product team to plan the next two years of Drive's marketplace.",
-    meta=[("Client", "Nine (Drive.com.au)"), ("Type of work", "Research &amp; strategy"),
+    num="10", sub="Coaching Nine's product team through design sprints for the marketplace's next two years.",
+    meta=[("Client", "Nine — Drive.com.au"), ("Type of work", "Research &amp; strategy"),
           ("Date", "June – September 2023"), ("My role", "Sprint lead &amp; coach · 4-week discovery")],
-    intro="Drive is Australia's largest automotive content network, owned by Nine Entertainment. Its "
-          "Cars 4 Sale and Sell My Car sections are key to growing the marketplace business.",
+    intro="Drive is Australia's largest automotive content network, owned by Nine Entertainment. Cars 4 "
+          "Sale and Sell My Car are the consumer-facing sections crucial to generating green shoots for "
+          "the marketplace business.",
     sections=[
-        ("The ask", ["A four-week discovery with Drive's design and product team, to rethink the "
-          "marketplace experience for the next one to two years and build up their research skills "
-          "along the way.",
-          "The team included the CFO, Head of Product, a Senior Product Manager, a Product Lead and "
-          "several designers."]),
+        ("The ask", ["A four-week discovery to support Drive's UX research and design capability — "
+          "partnering with their UI design and product team to reimagine the customer experience and "
+          "features of the marketplace for the next one to two years.",
+          "The cross-functional team ran deep: CFO, Head of Product, a Senior Product Manager, Product "
+          "Lead, digital designers and UX/UI designers."]),
         ("My role", None),
-        ("The outcome", ["Hero journeys for both marketplace products, with future opportunities and "
-          "user archetypes based on the research. These set Drive's product direction for the next two "
-          "years."]),
+        ("The outcome", ["Hero journeys for the two marketplace products — ideal customer experiences "
+          "and further opportunities — plus user archetypes grounded in the research, setting Drive's "
+          "product direction for the next two years."]),
     ],
-    role=["Planned and ran design sprints based on the Google Design Sprint, coaching the team "
-          "through each one.",
-          "Helped produce two high-fidelity responsive web prototypes.",
-          "Reviewed competitors to see which UX patterns worked best.",
-          "Ran research and ideation workshops, and coached the team in human-centred methods.",
-          "Ran two rounds of moderated user research, then synthesised the findings, wrote "
-          "recommendations and played them back to stakeholders.",
-          "Interviewed SMEs to understand the business and get stakeholders on the same page."],
+    role=["Planned, executed and coached the Drive team through agile design sprints, modelled on the "
+          "Google Design Sprint methodology.",
+          "Supported production of two high-fidelity responsive web prototypes.",
+          "Conducted an industry review of key competitors to identify optimal UX patterns.",
+          "Led research techniques and ideation workshops, coaching the team on human-centred methods.",
+          "Planned and executed two rounds of moderated user research — synthesis, design "
+          "recommendations and stakeholder playbacks.",
+          "Interviewed key SMEs for contextual understanding and stakeholder alignment."],
     outcome=None,
     stats=[("4", "week discovery"), ("2", "hi-fi prototypes"), ("2", "rounds of user research")],
     related=["stringline-redesign", "vicroads-learner-permit", "belong-north-star"])
 
 P["belong-north-star"] = dict(
-    num="11", sub="A North Star for Belong's order-to-activate journey, and a shift toward designing around customers.",
+    num="11", sub="A North Star vision that pivoted Belong toward customer-centric design and delivery.",
     meta=[("Client", "Belong"), ("Type of work", "Service design &amp; strategy"),
           ("Date", "November 2022 – April 2023"), ("My role", "Experience designer")],
-    intro="Belong asked Mantel for a North Star vision of the order-to-activate experience, to help the "
-          "business put customers at the centre of how it designs and delivers.",
+    intro="Belong engaged Mantel to create a North Star vision for the order-to-activate customer "
+          "experience — helping pivot the organisation towards a more customer-centric approach to design "
+          "and delivery.",
     sections=[
-        ("The ask", ["Help Belong agree on what a great order-to-activate journey looks like, and feel "
-          "confident about it."]),
-        ("Our approach", ["<b>Research:</b> industry and competitor analysis, stakeholder workshops, and "
-          "quantitative and qualitative customer research.",
-          "<b>Define:</b> mapped the problems and opportunities in a Vision Experience Map.",
-          "<b>Ideate:</b> workshops, concept generation and storyboards.",
-          "<b>Prototype:</b> wireframes and prototypes for the ideas with the most business value.",
-          "<b>Test:</b> several rounds of concept and usability testing."]),
+        ("The ask", ["Help Belong gain confidence and alignment on what an ideal, customer-centric "
+          "order-to-activate journey looks like."]),
+        ("Our approach", ["<b>Empathise:</b> extensive research, industry and competitor analysis, "
+          "stakeholder workshops, and quantitative and qualitative customer research.",
+          "<b>Define:</b> mapped challenges and opportunities through a Vision Experience Map.",
+          "<b>Ideate:</b> ideation workshops, concept canvassing, concept generation and storyboarding.",
+          "<b>Prototype:</b> wireframed and prototyped the high-value business ideas.",
+          "<b>Validate:</b> multiple rounds of concept and usability testing."]),
         ("The outcome", None),
     ],
     role=None,
-    outcome=["<b>Experience principles</b> for every customer interaction, written with the business and "
-          "tested with customers.",
-          "<b>The Vision Experience Map:</b> the ideal order-to-activate journey from start to finish, with "
-          "feature summaries, research and future opportunities. Belong can keep updating it.",
-          "<b>Tested concepts and designs,</b> including detailed designs for the first release of eSIM "
-          "ordering and activation. Other key journeys followed into delivery from there."],
+    outcome=["<b>Experience principles:</b> guiding principles that underpin and measure every customer "
+          "interaction with Belong — created with the business and validated through customer testing.",
+          "<b>The Vision Experience Map:</b> a holistic, end-to-end view of the ideal order-to-activate "
+          "journey — feature summaries, supporting research and future opportunities. Designed as a "
+          "living document that matures as Belong does.",
+          "<b>Validated concepts and designs:</b> future-state concepts plus granular designs for the "
+          "first release of the eSIM ordering and activation experience — the foundation for other key "
+          "journeys to go into delivery."],
     stats=None,
     related=["vicroads-vehicle-transfer", "toll-movemaestro", "drive-marketplace"])
 
@@ -418,7 +445,7 @@ def build(slug):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{plain_title} — Maurizio Lamanna</title>
-  <meta name="description" content="Case study: {plain_title}. {re.sub('<[^>]+>', '', p['sub'])}">
+  <meta name="description" content="Case study: {plain_title} — {re.sub('<[^>]+>', '', p['sub'])}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Mulish:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
