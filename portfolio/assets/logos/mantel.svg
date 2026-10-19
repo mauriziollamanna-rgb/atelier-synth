@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 56" height="56">
+  <!-- Triangle mark -->
+  <polygon points="0,44 16,16 32,44" fill="none" stroke="#1A2B3C" stroke-width="3.5" stroke-linejoin="round"/>
+  <!-- Wordmark -->
+  <text x="42" y="32" font-family="'Helvetica Neue',Arial,Helvetica,sans-serif" font-weight="700" font-size="26" fill="#1A2B3C" dominant-baseline="middle" letter-spacing="0.5">Mantel</text>
+</svg>

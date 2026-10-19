@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 175 56" height="56">
+  <text x="0" y="32" font-family="'Helvetica Neue',Arial,Helvetica,sans-serif" font-weight="700" font-size="30" fill="#1A1A1A" dominant-baseline="middle" letter-spacing="-0.5">Belong</text>
+  <!-- Teal dot accent -->
+  <circle cx="162" cy="34" r="5" fill="#00B4D8"/>
+</svg>

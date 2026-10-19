@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" height="56">
+  <!-- CH monogram block -->
+  <rect x="0" y="8" width="40" height="40" fill="#1A1A2E"/>
+  <text x="20" y="30" font-family="'Georgia','Times New Roman',serif" font-weight="700" font-size="20" fill="white" text-anchor="middle" dominant-baseline="middle">CH</text>
+  <!-- Wordmark -->
+  <text x="50" y="23" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="14" fill="#1A1A2E" dominant-baseline="middle" letter-spacing="0.5">CHARTER</text>
+  <text x="50" y="40" font-family="Arial,Helvetica,sans-serif" font-weight="400" font-size="14" fill="#1A1A2E" dominant-baseline="middle" letter-spacing="0.5">HALL</text>
+</svg>

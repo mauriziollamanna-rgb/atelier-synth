@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 56" height="56">
+  <!-- Yellow block -->
+  <rect x="0" y="8" width="56" height="40" fill="#F5A800"/>
+  <text x="28" y="30" font-family="'Arial Black',Arial,Helvetica,sans-serif" font-weight="900" font-size="22" fill="#1A1A1A" text-anchor="middle" dominant-baseline="middle" letter-spacing="-0.5">TOLL</text>
+  <!-- GROUP text -->
+  <text x="70" y="26" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="18" fill="#1A1A1A" dominant-baseline="middle">GROUP</text>
+</svg>
