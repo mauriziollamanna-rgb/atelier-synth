@@ -350,7 +350,7 @@ NAV = """  <header class="nav" id="top">
     <nav class="nav__links" aria-label="Primary">
       <a href="../index.html#about">About</a>
       <a href="../index.html#work">Work</a>
-      <a href="../index.html#cv">CV</a>
+      <a href="../cv.html">CV</a>
       <a href="../index.html#contact">Contact</a>
     </nav>
   </header>"""
